@@ -1,0 +1,41 @@
+Package: cdQuPath
+Title: Analysis tools for Codex PhenoCycler-Fusion images with QuPath and R
+Version: 0.99.0
+Authors@R: 
+    person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
+        role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
+Description: This package introduces the basic workflow for spatial phenotyping,
+    cell type annotation, multi-nucleus detection, quality control, 
+    and calculating cell neighborhoods from whole slide 
+    images of ultra-high multiplexed tissue imaged by 'Akoya Biosciences' assays.
+    The basic workflow makes use of QuPath, StarDist, Cellpose, Seurat, and 
+    hoodscanR.
+License: GPL (>=3) + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+VignetteBuilder: knitr
+biocViews: CellBiology, Visualization, Clustering, SingleCell, Proteomics
+Depends:
+    R (>= 4.3.0)
+Imports:
+    ggplot2,
+    hoodscanR,
+    MASS,
+    Matrix,
+    methods,
+    mclust,
+    reshape2,
+    S4Vectors,
+    Seurat,
+    SeuratObject,
+    SpatialExperiment,
+    SummarizedExperiment
+Suggests:
+    BiocStyle,
+    knitr,
+    rmarkdown,
+    testthat,
+    dittoSeq
+URL: https://github.com/jianhong/cdQuPath
+BugReports: https://github.com/jianhong/cdQuPath/issues

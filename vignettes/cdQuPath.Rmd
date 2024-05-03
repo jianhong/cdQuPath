@@ -1,0 +1,363 @@
+---
+title: "cdQuPath Vignette: overview"
+author: "Jianhong Ou"
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('cdQuPath')`"
+vignette: >
+  %\VignetteIndexEntry{cdQuPath Vignette: overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    fig_caption: true
+---
+
+```{r, echo=FALSE, results="hide", warning=FALSE}
+suppressPackageStartupMessages({
+  library(cdQuPath)
+  library(Seurat)
+  library(dittoSeq)
+  library(ggplot2)
+  library(hoodscanR)
+  library(SpatialExperiment)
+})
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+# Introduction
+
+This package presents a fundamental workflow for spatial phenotyping, cell type annotation, multi-nucleus detection, quality control, and calculating cell neighborhoods from whole slide images of ultra-high multiplexed tissue captured by 'Akoya Biosciences' assays. The workflow leverages QuPath, StarDist, Cellpose, Seurat, and hoodscanR.
+
+The upstream code are available in the folder of `extdata`.
+The detailed documentation will be provide in following sections.
+
+The _cdQuPath_ aims to provide a easy to use tool for downstream analysis
+with `Seurat` and `hoodscanR` for
+quality control and neighborhoods analysis.
+
+# Quick start
+
+Here is an example using _cdQuPath_.
+
+## Installation
+
+First, please download and install [QuPath](https://qupath.github.io/) (v0.4.0 or newer). The cell segmentation requires the [cellpose](https://github.com/BIOP/qupath-extension-cellpose) and [stardist](https://github.com/qupath/qupath-extension-stardist) extension for `QuPath`. Don't forget to set the Python path for the `Cellpose` extension.
+
+Then, download a copy of the Groovy script to your local machine. There are two scripts available: `cellpose_stardist_multiNucleis_underGUI.groovy` and `ExportCellDetectionMeasurement.groovy`.
+
+```{sh, eval=FALSE}
+git clone https://github.com/jianhong/cdQuPath.git
+cd cdQuPath/inst/extdata/scripts
+ls
+```
+
+Then, install _cdQuPath_ and other packages required to run 
+the examples.
+
+```{r installation, eval=FALSE}
+library(BiocManager)
+BiocManager::install("jianhong/cdQuPath")
+```
+
+## Step 1. Cell segmentation
+
+This step involves merging the results from 
+[Cellpose](https://www.cellpose.org/) and
+[Stardist](https://github.com/stardist/stardist) analyses.
+
+Navigate to line 25 of the `cellpose_stardist_multiNucleis_underGUI.groovy`
+script and update the path of the `stardistModel` variable to match the 
+file path of your `cell_seg_model.pb`.
+Adjust the parameters from [line 26 to line 38](https://github.com/jianhong/codex_qupath/blob/main/scr/cellpose_stardist_multiNucleis_underGUI.groovy#L26-L38) accordingly.
+You may want to change the `cytoChannels` and `measurementPercentileCutoff` according to your observations.
+The `distanceCutoff` is the maximal cutoff distance of nucleus for multiple nucleus cells.
+
+Then, select a region in the opened TIFF view window in QuPath. Start with a small region when testing the script, and expand it once you achieve the desired results. Please note that if you observe regional biases, you may want to exclude the biases regions. If it is un-avoidable, you may want to normalize the signals. We will discuss this later.
+
+Finally, run the `cellpose_stardist_multiNucleis_underGUI.groovy` script by clicking the Run button in the Script Editor.
+
+[![Youtube Video](https://img.youtube.com/vi/3SKKSDhlEkw/0.jpg)](https://youtu.be/3SKKSDhlEkw)
+
+## Step 2. Export the cell segmentation
+
+The script `ExportCellDetectionMeasurement.groovy` is designed to export cell segmentation data. Upon export, two files are generated and saved in a folder prefixed with `measurementsExport`. 
+
+- The `.tsv` file is compatible with `createSeuratObj.R`.
+- The `.geojson` file is intended for reloading into `QuPath`. 
+
+These exported files contain comprehensive information, including cell area, locations, marker signal statistics, and nucleus classification.
+The cell locations are particularly useful for neighborhood analysis.
+
+## Step 3. Work in R
+
+### Load library
+
+```{r load_library}
+library(cdQuPath)
+library(Seurat)
+library(ggplot2)
+library(dittoSeq)
+library(hoodscanR)
+library(SpatialExperiment)
+```
+
+### Create a Seurat object from output `tsv` file.
+
+```{r quick_start}
+tsv <- system.file("extdata", "sample.qptiff.tsv.gz",
+                   package = "cdQuPath",
+                   mustWork = TRUE)
+seu <- createSeuratObj(tsv, useValue = 'Median',
+                       markerLocations = CodexPredefined$markerLocations)
+seu
+```
+### Quality Control
+
+The conventional method for evaluating dynamic range involves computing a signal-to-background (SNR) ratio. This is done by dividing the average intensity of the top 20 brightest cells by the average intensity of the weakest 10% of cells. An SNR value of 10 or higher is indicative of reliable image analysis. It is recommended that the SNR falls within the range of (10, Inf], typically exceeding 100. An SNR below 3 suggests that the antibodies are performing poorly.
+
+```{r dynamicRanges}
+## please make sure the default assay is 'RNA'
+DefaultAssay(seu)
+dr <- dynamicRanges(seu)
+dr
+## markers may not work;
+## Please note that DAPI.01 is used for cell detection.
+avoid_markers <- 
+  names(dr$dynamic_range)[dr$dynamic_range<3 | is.na(dr$dynamic_range)]
+avoid_markers
+```
+
+Verify the cell area and nucleus area for multi-nuclei.
+
+```{r vlnplot1}
+# Visualize QC metrics as a violin plot
+colnames(seu[[]])
+VlnPlot(seu,
+        features = c("Cell.Area.um.2",
+                     "Nucleus.Area.um.2",
+                     'Nucleus.Cell.area.ratio'),
+        split.by = 'Cell.isMultiNucleis',
+        pt.size = ifelse(ncol(seu)>500, 0, 1),
+        ncol = 3)
+```
+```{r vlnPlot2}
+VlnPlot(seu, features = c('cd68', 'CD11c', 'cd34'),
+        pt.size = ifelse(ncol(seu)>500, 0, 1),
+        ncol = 3)
+```
+
+
+Now, we can proceed with filtering the cells. Upon observation, we notice that the average area of single-nucleus cells is below 500. Therefore, we establish the cutoff for cell area at approximately three times the size of single-nucleus cells.
+Additionally, if the nucleus-to-cell area ratio is excessively high, it suggests potential issues with the cell area detection process. We will filter out those cells.
+
+```{r filter}
+keep <- seu$Cell.Area.um.2<1500 & seu$Nucleus.Cell.area.ratio < .9
+seu <- subset(seu,
+              cells = colnames(seu)[keep],
+              features = names(dr$dynamic_range)[!is.na(dr$dynamic_range)])
+seu
+```
+
+### Normalizing the data
+
+The initial query is whether we are observing abnormally high or low intensity regions in specific sub-regions. If these variations are deemed unrelated to tissue-specific characteristics, it might be advisable to normalize each marker channel accordingly. The positional data of cells is contained within the reduction matrix labeled 'pos'.
+
+```{r regionCheck}
+nrow(seu)
+suppressMessages(
+  FeaturePlot(seu, slot='count',
+            features = rownames(seu)[1],
+            reduction = 'pos',
+            ncol = 2)
+)
+```
+
+You may attempt to normalize the irregular sub-regions using LOESS (Local Polynomial Regression Fitting) with the `loessSmooth` function.
+
+```{r loessSmooth, eval=FALSE}
+## this script will not run in the vignette.
+## it is time consuming.
+## under-development, do not try
+seu_norm <- loessSmooth(seu)
+FeaturePlot(seu_norm, slot='count',
+            features = rownames(seu)[1],
+            reduction = 'pos',
+            ncol = 2)
+```
+
+The next step involves cell-wise normalization. The available normalization methods are 'LogNormalize', 'CLR' (centered log ratio), 'RC' (CPM), and 'zscore', which can be applied using the `normData` function. The normalization method except for 'zscore' is borrowed from `Seurat` package.
+
+```{r normalization}
+seu <- normData(seu, normalizationMethod='zscore')
+```
+
+### Identification of highly variable markers (marker selection)
+
+In the background, this step will execute the `FindVariableFeatures` function and exclude the 'avoidMarkers' from the list of variable markers. Please ensure that 'nFeatures' is smaller than the total number of available markers.
+
+```{r variableFeatures}
+seu <- findVarMarkers(
+    seu,
+    avoidMarkers=c('DAPI.01', 'hist3h2a'),
+    nFeatures = 10L)
+VariableFeatures(seu)
+plot1 <- VariableFeaturePlot(seu)
+LabelPoints(plot = plot1, points = VariableFeatures(seu), repel = TRUE)
+```
+
+### Scaling the data and do cluster analysis
+
+The following steps outline the standard process of single-cell analysis in the `Seurat` package. You may adjust the process accordingly to suit your needs.
+
+```{r}
+all.markers <- rownames(seu)
+seu <- ScaleData(seu, features = all.markers)
+seu <- RunPCA(seu, features = VariableFeatures(seu))
+dim <- seq.int(ncol(Embeddings(seu$pca)))
+VizDimLoadings(seu, dims = dim, reduction = "pca")
+seu <- FindNeighbors(seu, dims = dim)
+seu <- FindClusters(seu, resolution = 0.9)
+seu <- RunUMAP(seu, reduction = "pca", dims = dim)
+pt.size <- ifelse(ncol(seu)>500, 0, 2)
+DimPlot(seu,
+        reduction = 'umap', label = TRUE,
+        pt.size = pt.size) + scale_y_reverse()
+## check the distribution of the clusters in spatial position.
+ncol <- ceiling(sqrt(length(unique(seu$seurat_clusters))))
+DimPlot(seu,
+        reduction = 'pos', label = FALSE,
+        split.by = 'seurat_clusters',
+        ncol = ncol, pt.size = pt.size) + scale_y_reverse()
+## check the nucleis distribution
+dittoBarPlot(seu,
+             var = 'Cell.isMultiNucleis',
+             group.by='seurat_clusters')
+DimPlot(seu, reduction = 'pos', label = TRUE,
+        split.by = 'Cell.isMultiNucleis',
+        pt.size = pt.size) + scale_y_reverse()
+VlnPlot(seu,
+        features = c('Nucleus.Area.um.2',
+                     'Cell.Area.um.2',
+                     'Nucleus.Cell.area.ratio'),
+        pt.size = pt.size)
+## Dot plot
+markers <- unique(FindAllMarkers(seu)$gene)
+DotPlot(seu, features = markers) + coord_flip()
+```
+
+### Rescale data using Gaussian Mixture Model
+
+In the downstream analysis, cell types are detected by fitting a multiple-class Gaussian Mixture Model (GMM) to the re-scaled data. The raw intensities are converted to probabilities, and a cutoff of 0.5 is set for cell type assignment.
+
+```{r gmm}
+seu <- fitGMM(seu)
+DotPlot(seu, features = markers, assay = 'GMM') + coord_flip()
+```
+
+
+### Correlation heatmap
+
+The correlation heatmap will display the signal similarity among different markers. The distance will be calculated using the `stats::dist` function. Users can experiment with different inputs such as z-scales, GMM data, and so on.
+
+```{r cor}
+DefaultAssay(seu)
+p <- markerCorrelation(seu)
+names(p)
+## plot the correlations for data, here it is Z-scale data
+p[['data']]
+## use GMM rescaled data to plot the correlation
+DefaultAssay(seu) <- 'GMM'
+p_GMM <- markerCorrelation(seu)
+p_GMM[['data']]
+## 
+DefaultAssay(seu) <- 'RNA'
+```
+
+### Assign cell types
+
+The phenotype will utilize the re-scaled data obtained through GMM. Two methods are available for assigning cell types: 'Rank' and 'Boolean'. With the 'Rank' option, cell types are assigned based on the rank of probabilities for the positive markers. On the other hand, the 'Boolean' option assigns cell types according to the order of the classifier for the positive markers.
+
+The metadata 'celltype' stores the assigned cell types for each Seurat cluster. Additionally, the metadata 'celltype_all' contains all possible cell types for each cell, determined by a cutoff of 0.5. Finally, the metadata 'celltype_first' represents the initial assignment.
+
+```{r celltype}
+seu <- detectCellType(seu)
+table(seu$celltype)
+## check the cell type annotation by clusters
+DimPlot(seu, group.by = 'celltype')
+DimPlot(seu, group.by = 'celltype', reduction = 'pos')
+dittoBarPlot(seu,
+             var = 'celltype',
+             group.by='Cell.isMultiNucleis')
+## check the first annotation of each cell, not restricted by seurat_cluster
+DimPlot(seu, group.by = 'celltype_first', reduction = 'pos')
+dittoBarPlot(seu,
+             var = 'celltype_first',
+             group.by='Cell.isMultiNucleis')
+```
+
+### Neighborhoods analysis
+
+After annotating cell types, we can assess whether these annotations exhibit spatial enrichment and conduct analyses of cellular neighborhoods throughout the tissue. Here we borrow the power of `hoodscanR` to identifying interactions between spatial communities.
+
+```{r neighborhoodsAna}
+clusterK <- 12
+spe <- neighborhoodsAna(seu, clusterK = clusterK,
+                        k = 10, ## maximal 10 neightbors
+                        anno_col = 'celltype_first')
+# Plot the metrics for probability matrix
+alpha <- 0.8 # point alpha
+size <- 3 # point size
+plotTissue(spe, color = entropy, size = size, alpha = alpha) +
+    scale_color_gradientn(colors=CodexPredefined$heatColor)
+plotTissue(spe, color = perplexity, size = size, alpha = alpha) +
+    scale_color_gradientn(colors=CodexPredefined$heatColor)
+# Plot the clusters for the probability matrix
+plotTissue(spe, color = clusters, size = size, alpha = alpha)
+# Plot heatmap for neighbourhood analysis
+plotColocal(spe, pm_cols = unique(spe$celltype))
+# Plot probability distribution
+plotProbDist(spe, pm_cols = unique(spe$celltype), 
+             by_cluster = TRUE, plot_all = TRUE, 
+             show_clusters = as.character(seq(clusterK)))
+```
+
+### Co-occurrence analysis
+
+The Jaccard Index is a statistic used for gauging the similarity and diversity of sample sets. The Jaccard Index is defined as: $\frac{cooccurent_celltype_A_and_B}{count_celltype_A + count_celltype_B - cooccurent_celltype_A_and_B}$
+
+```{r}
+maxgap <- max(colData(spe)$Cell.Length.um) * 2
+ji <- JaccardIndex(spe, maxgap = maxgap)
+plotJaccardIndex(ji)
+```
+
+
+The co-occurrence score gives us an indication on whether given two factors such as cell cluster, cell type, and etc, co-occur with each other at increasing distances across the tissue. The co-occurrence score is defined as: $ \frac{p(factor1|factor2)}{p(factor1)} $
+
+```{r coOccurence}
+
+```
+
+The spatial score define the distance ratio among three factors. The spatial score is defined as: $\frac{celltypeCenter_distance_to_nearest_celltypeRight}{celltypeCenter_distance_to_nearest_celltypeLeft}$.
+
+```{r spatialScore}
+## need to increase the neighbors number
+spe <- neighborhoodsAna(seu, clusterK = clusterK,
+                        k = 500, ## maximal 500 neighbors
+                        anno_col = 'celltype_first')
+ss <- spatialScore(spe,
+                   celltypeCenter = "M2 MACROPHAGE",
+                   celltypeLeft = "Cytotoxic T Cells",
+                   celltypeRight = "Tumor/Myeloid")
+head(ss)
+boxplot(ss$spatialScore)
+```
+
+# Session Info
+```{r sessionInfo, results='asis'}
+sessionInfo()
+```
+
