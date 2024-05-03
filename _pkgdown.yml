@@ -1,0 +1,18 @@
+url: https://jianhong.github.io/cdQuPath
+
+template:
+  params:
+    bootswatch: flatly
+    #ganalytics: UA-99999999-9
+
+home:
+  title: "Analysis tools for Codex PhenoCycler-Fusion images with QuPath and R"
+  type: inverse
+
+
+navbar:
+  right:
+   - icon: fa-github
+     href: https://github.com/jianhong/cdQuPath
+     
+
