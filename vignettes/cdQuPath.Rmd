@@ -310,14 +310,12 @@ spe <- neighborhoodsAna(seu, clusterK = clusterK,
                         k = 10, ## maximal 10 neightbors
                         anno_col = 'celltype_first')
 # Plot the metrics for probability matrix
-alpha <- 0.8 # point alpha
-size <- 3 # point size
-plotTissue(spe, color = entropy, size = size, alpha = alpha) +
+plotTissue(spe, color = entropy) +
     scale_color_gradientn(colors=CodexPredefined$heatColor)
-plotTissue(spe, color = perplexity, size = size, alpha = alpha) +
+plotTissue(spe, color = perplexity) +
     scale_color_gradientn(colors=CodexPredefined$heatColor)
 # Plot the clusters for the probability matrix
-plotTissue(spe, color = clusters, size = size, alpha = alpha)
+plotTissue(spe, color = clusters)
 # Plot heatmap for neighbourhood analysis
 plotColocal(spe, pm_cols = unique(spe$celltype))
 # Plot probability distribution
