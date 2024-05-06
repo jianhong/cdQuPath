@@ -326,7 +326,7 @@ plotProbDist(spe, pm_cols = unique(spe$celltype),
 
 ### Co-occurrence analysis
 
-The Jaccard Index is a statistic used for gauging the similarity and diversity of sample sets. The Jaccard Index is defined as: $\frac{cooccurent_celltype_A_and_B}{count_celltype_A + count_celltype_B - cooccurent_celltype_A_and_B}$
+The Jaccard Index is a statistic used for gauging the similarity and diversity of sample sets. The Jaccard Index is defined as: $\frac{cooccurent\_celltype\_A\_and\_B}{count\_celltype\_A+count\_celltype\_B-cooccurent\_celltype\_A\_and\_B}$
 
 ```{r}
 maxgap <- max(colData(spe)$Cell.Length.um) * 2
@@ -335,13 +335,13 @@ plotJaccardIndex(ji)
 ```
 
 
-The co-occurrence score gives us an indication on whether given two factors such as cell cluster, cell type, and etc, co-occur with each other at increasing distances across the tissue. The co-occurrence score is defined as: $ \frac{p(factor1|factor2)}{p(factor1)} $
+The co-occurrence score gives us an indication on whether given two factors such as cell cluster, cell type, and etc, co-occur with each other at increasing distances across the tissue. The co-occurrence score is defined as: $\frac{p(factor1|factor2)}{p(factor1)}$
 
 ```{r coOccurence}
-
+## TODO
 ```
 
-The spatial score define the distance ratio among three factors. The spatial score is defined as: $\frac{celltypeCenter_distance_to_nearest_celltypeRight}{celltypeCenter_distance_to_nearest_celltypeLeft}$.
+The spatial score define the distance ratio among three factors. The spatial score is defined as: $\frac{celltypeCenter\_distance\_to\_nearest\_celltypeRight}{celltypeCenter\_distance\_to\_nearest\_celltypeLeft}$.
 
 ```{r spatialScore}
 ## need to increase the neighbors number

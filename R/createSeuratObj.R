@@ -66,6 +66,16 @@ createSeuratObj <- function(
   d <- d[, !mcoll, drop=FALSE]
   cn <- colnames(d)
   genes <- sub("..Cell..Median", '', cn[grepl('Cell..Median', cn)])
+  if(length(markerLocations)!=1){
+    if(!all(names(markerLocations) %in% genes)){
+      warning('Found markers not in the data: ',
+              names(markerLocations)[!names(markerLocations) %in% genes])
+      markerLocations <- markerLocations[names(markerLocations) %in% genes]
+      if(length(markerLocations)<1){
+        stop('No selected marker available!')
+      }
+    }
+  }
   cn1 <- unique(sub('^(.*?)\\.\\.(Nucleus|Membrane|Cytoplasm|Cell)\\.\\.(.*?)$',
                     "..\\2..\\3", cn))
   dx <- lapply(cn1, function(.ele){
@@ -85,7 +95,7 @@ createSeuratObj <- function(
     dx$seurat_obj_raw[marker, ] <- 
       dx[[paste(markerLocations[marker], useValue, sep="_")]][marker, ]
   }
-  seu <- CreateSeuratObject(dx$seurat_obj_raw,
+  seu <- CreateSeuratObject(as(dx$seurat_obj_raw, "sparseMatrix"),
                             assay = CodexPredefined$defaultAssay,
                             meta.data = meta,
                             ...)
