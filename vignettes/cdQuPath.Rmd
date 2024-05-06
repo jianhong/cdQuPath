@@ -217,7 +217,9 @@ all.markers <- rownames(seu)
 seu <- ScaleData(seu, features = all.markers)
 seu <- RunPCA(seu, features = VariableFeatures(seu))
 dim <- seq.int(ncol(Embeddings(seu$pca)))
-VizDimLoadings(seu, dims = dim, reduction = "pca")
+VizDimLoadings(seu, dims = dim,
+               nfeatures=length(VariableFeatures(seu)),
+               reduction = "pca")
 seu <- FindNeighbors(seu, dims = dim)
 seu <- FindClusters(seu, resolution = 0.9)
 seu <- RunUMAP(seu, reduction = "pca", dims = dim)

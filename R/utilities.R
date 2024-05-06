@@ -41,6 +41,7 @@ normalize.loess <- function(
       ##put endpoints in so we can interpolate
       xx <- x[index]
       yy <- y[index]
+      aux <- NULL
       tryCatch({
         aux <- loess(yy~xx, span=span, degree=1, weights=w, family=family.loess)
         aux <- predict(aux, data.frame(xx=x), se = FALSE) / J
@@ -51,6 +52,8 @@ normalize.loess <- function(
       }, error=function(e){
         # do nothing
       })
+      rm(aux, index, x, y, xx, yy)
+      #gc(reset=TRUE, verbose = FALSE)
     }
   }
   close(pb)

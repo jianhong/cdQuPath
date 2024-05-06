@@ -131,12 +131,12 @@ fitGMM <- function(
   dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay, layer = 'counts')
   dat <- apply(dat, 1, function(marker){
     id <- order(marker)
-    tryCatch(
+    y <- tryCatch(
       {
         dens <- densityMclust(
           marker[id], plot = FALSE, verbose = FALSE)
         cdf <- cdfMclust(dens, data=marker[id])
-        y <- cdf$y[match(marker, marker[id])]
+        cdf$y[match(marker, marker[id])]
       }, error=function(.e){
         warning(.e,
                 ' Data may lack of variance.',
@@ -152,7 +152,7 @@ fitGMM <- function(
                       sdlog = dens$estimate['sdlog'])
         cdf <- cdf/max(cdf)
         cdf <- c('0'=0, cdf)
-        y <- cdf[match(marker, as.numeric(names(cdf)))]
+        cdf[match(marker, as.numeric(names(cdf)))]
       }
     )
     y
@@ -225,6 +225,7 @@ loessSmooth <- function(
     # plot(as.numeric(ndat), as.numeric(dat[m, ]), type='p', cex=.2, pch=16)
     ## convert log2.it back
     dat[m, ] <- 2^ndat - pseudoCounts
+    rm(mat, nmat, ndat)
   }
   ## backup the raw counts
   seu$raw_counts <- CreateAssayObject(
