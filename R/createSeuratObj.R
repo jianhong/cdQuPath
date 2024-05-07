@@ -62,6 +62,7 @@ createSeuratObj <- function(
     ifelse(grepl('MultiNucleis', meta[[CodexPredefined$multiNucleis]]),
            'MultiNucleis', 'SingleNuclei')
   colnames(meta) <- sub('\u00b5', 'u', colnames(meta))
+  colnames(meta) <- sub('\\.\\.m', '.um', colnames(meta)) ##fix the ..m in case above one does not work.
   colnames(meta) <- gsub('\\.+', '.', colnames(meta))
   d <- d[, !mcoll, drop=FALSE]
   cn <- colnames(d)
