@@ -338,7 +338,7 @@ seu2 <- fitGMM(seu2)
 seu2 <- detectCellType(seu2)
 seu2$pca <- NULL # to advoid different pca columns error.
 seu$orig.ident <- 'region1'
-seu$orig.ident <- 'region2'
+seu2$orig.ident <- 'region2'
 mergedSeu <- merge(seu, seu2, merge.dr = TRUE)
 mergedSeu
 Assays(mergedSeu)
