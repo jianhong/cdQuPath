@@ -102,10 +102,14 @@ markerCorrelation <- function(
   stopifnot(all(layers %in% Layers(seu)))
   if(length(names(layers))!=length(layers)) names(layers) <- layers
   lapply(layers, function(layer){
-    mat <- GetAssayData(seu, layer = layer)
-    mat <- t(as.matrix(mat))
-    cor <- cor(mat, method = method)
-    ggHeatmap(cor, title=layer, hclust_method=hclust_method, ...)
+    tryCatch({
+      mat <- GetAssayData(seu, layer = layer)
+      mat <- t(as.matrix(mat))
+      cor <- cor(mat, method = method)
+      ggHeatmap(cor, title=layer, hclust_method=hclust_method, ...)
+    }, error = function(e){
+      NULL
+    })
   })
 }
 
@@ -130,6 +134,10 @@ fitGMM <- function(
   stopifnot(is(seu, 'Seurat'))
   dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay, layer = 'counts')
   dat <- apply(dat, 1, function(marker){
+    if(sum(marker)<2){
+      # if only 1 counts or less, densityMclust will take forever.
+      return(marker)
+    }
     id <- order(marker)
     y <- tryCatch(
       {

@@ -114,6 +114,7 @@ seu <- createSeuratObj(tsv, useValue = 'Median',
                        markerLocations = CodexPredefined$markerLocations)
 seu
 ```
+
 ### Quality Control
 
 The conventional method for evaluating dynamic range involves computing a signal-to-background (SNR) ratio. This is done by dividing the average intensity of the top 20 brightest cells by the average intensity of the weakest 10% of cells. An SNR value of 10 or higher is indicative of reliable image analysis. It is recommended that the SNR falls within the range of (10, Inf], typically exceeding 100. An SNR below 3 suggests that the antibodies are performing poorly.
@@ -300,13 +301,69 @@ dittoBarPlot(seu,
              group.by='Cell.isMultiNucleis')
 ```
 
+### Merge multiple Seurat object if necessary
+
+If you have dataset from multiple sub-regions, you can process all of them as it shown above and then merge them.
+For some reasons, some images may not have same background in different regions.
+You can simply detect the cells for each sub-regions with similar background or baseline,
+and then do GMM rescaled for each of them.
+After that, you can merge them by combining the analized results.
+
+```{r runSample2}
+tsv2 <- system.file("extdata", "sample2.qptiff.tsv.gz",
+                   package = "cdQuPath",
+                   mustWork = TRUE)
+seu2 <- createSeuratObj(tsv2, useValue = 'Median',
+                       markerLocations = CodexPredefined$markerLocations)
+seu2
+keep <- seu2$Cell.Area.um.2<1500 & seu2$Nucleus.Cell.area.ratio < .9
+table(keep)
+seu2 <- subset(seu2,
+              cells = colnames(seu2)[keep])
+seu2 <- normData(seu2, normalizationMethod='zscore')
+seu2 <- findVarMarkers(
+    seu2,
+    avoidMarkers=c('DAPI.01', 'hist3h2a'),
+    nFeatures = 10L)
+seu2 <- ScaleData(seu2, features = rownames(seu2))
+seu2 <- RunPCA(seu2, features = VariableFeatures( seu2))
+dim <- seq.int(ncol(Embeddings(seu2$pca)))
+seu2 <- FindNeighbors(seu2, dims = dim)
+seu2 <- FindClusters(seu2, resolution = 0.9)
+
+seu2 <- fitGMM(seu2)
+seu2 <- detectCellType(seu2)
+seu2$pca <- NULL # to advoid different pca columns error.
+seu$orig.ident <- 'region1'
+seu$orig.ident <- 'region2'
+mergedSeu <- merge(seu, seu2, merge.dr = TRUE)
+mergedSeu
+Assays(mergedSeu)
+dittoBarPlot(mergedSeu,
+             var = 'celltype_first',
+             group.by='orig.ident')
+FeaturePlot(mergedSeu, slot='count',
+            features = rownames(mergedSeu)[1],
+            reduction = 'pos',
+            ncol = 2)
+DimPlot(mergedSeu, group.by = 'celltype', reduction = 'pos')
+## use GMM rescaled data to plot the correlation
+DefaultAssay(mergedSeu) <- 'GMM'
+p_GMM <- markerCorrelation(mergedSeu, layers = 'data')
+p_GMM[['data']]
+## 
+DefaultAssay(seu) <- 'RNA'
+```
+
+
 ### Neighborhoods analysis
 
 After annotating cell types, we can assess whether these annotations exhibit spatial enrichment and conduct analyses of cellular neighborhoods throughout the tissue. Here we borrow the power of `hoodscanR` to identifying interactions between spatial communities.
 
 ```{r neighborhoodsAna}
 clusterK <- 12
-spe <- neighborhoodsAna(seu, clusterK = clusterK,
+spe <- neighborhoodsAna(mergedSeu, ## if no merging step, use `seu`.
+                        clusterK = clusterK,
                         k = 10, ## maximal 10 neightbors
                         anno_col = 'celltype_first')
 # Plot the metrics for probability matrix
@@ -345,7 +402,7 @@ The spatial score define the distance ratio among three factors. The spatial sco
 
 ```{r spatialScore}
 ## need to increase the neighbors number
-spe <- neighborhoodsAna(seu, clusterK = clusterK,
+spe <- neighborhoodsAna(mergedSeu, clusterK = clusterK,
                         k = 500, ## maximal 500 neighbors
                         anno_col = 'celltype_first')
 ss <- spatialScore(spe,
