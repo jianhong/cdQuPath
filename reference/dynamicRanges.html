@@ -8,7 +8,7 @@ Lower than 3 indicates poor-performing antibodies."><!-- mathjax --><script src=
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -22,7 +22,7 @@ Lower than 3 indicates poor-performing antibodies."><!-- mathjax --><script src=
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.2</span>
       </span>
     </div>
 
@@ -36,20 +36,20 @@ Lower than 3 indicates poor-performing antibodies."><!-- mathjax --><script src=
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/jianhong/cdQuPath" class="external-link">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate the dynamic range.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/HEAD/R/dynamicRanges.R" class="external-link"><code>R/dynamicRanges.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/main/R/dynamicRanges.R" class="external-link"><code>R/dynamicRanges.R</code></a></small>
     <div class="hidden name"><code>dynamicRanges.Rd</code></div>
     </div>
 
@@ -68,11 +68,13 @@ Lower than 3 indicates poor-performing antibodies.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>seu</dt>
+
+
+<dl><dt id="arg-seu">seu<a class="anchor" aria-label="anchor" href="#arg-seu"></a></dt>
 <dd><p>A Seurat object.</p></dd>
 
 
-<dt>topN, bottomN</dt>
+<dt id="arg-topn-bottomn">topN, bottomN<a class="anchor" aria-label="anchor" href="#arg-topn-bottomn"></a></dt>
 <dd><p>A numeric.
 If it is greater than 1, use top topN brightest cells or bottomN weakest
 cells.
@@ -80,19 +82,17 @@ If it is smaller than 1 and greater than 0, use top 100*topN/bottomN
 percentage cells.</p></dd>
 
 
-<dt>layer</dt>
+<dt id="arg-layer">layer<a class="anchor" aria-label="anchor" href="#arg-layer"></a></dt>
 <dd><p>The matrix used to calculate the dynamic range.</p></dd>
 
 
-<dt>...</dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>parameters for GetAssayData</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A list with element brightest, weakest, and dynamic_range.
+    <p>A list with element brightest, weakest, and dynamic_range.
 For dynamic ranges, Inf indicates zero background. NaN indicates zero/zero</p>
     </div>
 
@@ -115,15 +115,15 @@ For dynamic ranges, Inf indicates zero background. NaN indicates zero/zero</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 
