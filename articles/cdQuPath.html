@@ -562,7 +562,7 @@ create a merged dataset.</p>
 <span><span class="va">seu2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectCellType.html">detectCellType</a></span><span class="op">(</span><span class="va">seu2</span><span class="op">)</span></span>
 <span><span class="va">seu2</span><span class="op">$</span><span class="va">pca</span> <span class="op">&lt;-</span> <span class="cn">NULL</span> <span class="co"># to advoid different pca columns error.</span></span>
 <span><span class="va">seu</span><span class="op">$</span><span class="va">orig.ident</span> <span class="op">&lt;-</span> <span class="st">'region1'</span></span>
-<span><span class="va">seu</span><span class="op">$</span><span class="va">orig.ident</span> <span class="op">&lt;-</span> <span class="st">'region2'</span></span>
+<span><span class="va">seu2</span><span class="op">$</span><span class="va">orig.ident</span> <span class="op">&lt;-</span> <span class="st">'region2'</span></span>
 <span><span class="va">mergedSeu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">seu2</span>, merge.dr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">mergedSeu</span></span></code></pre></div>
 <pre><code><span><span class="co">## An object of class Seurat </span></span>
