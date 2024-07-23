@@ -299,7 +299,14 @@ DimPlot(seu, group.by = 'celltype_first', reduction = 'pos')
 dittoBarPlot(seu,
              var = 'celltype_first',
              group.by='Cell.isMultiNucleis')
+## export the celltype
+ct <- data.frame(Object.ID=colnames(seu),
+                 CellType=seu$celltype)
+celltype_csv <- tempfile(fileext = '.csv')
+write.csv(ct, file = celltype_csv, row.names = FALSE)
+## after exporting, you can load the celltypes back to QuPath by running the script load_celltype.groovy in the scripts folder.
 ```
+[![Youtube Video](https://img.youtube.com/vi/OH8TKCxZKkM/0.jpg)](https://youtu.be/OH8TKCxZKkM)
 
 ### Merge multiple Seurat object if necessary
 
@@ -352,7 +359,7 @@ DefaultAssay(mergedSeu) <- 'GMM'
 p_GMM <- markerCorrelation(mergedSeu, layers = 'data')
 p_GMM[['data']]
 ## 
-DefaultAssay(seu) <- 'RNA'
+DefaultAssay(mergedSeu) <- 'RNA'
 ```
 
 
