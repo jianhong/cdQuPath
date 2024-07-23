@@ -507,14 +507,15 @@ assignment.</p>
 <p><a href="https://youtu.be/OH8TKCxZKkM" class="external-link"><img src="https://img.youtube.com/vi/OH8TKCxZKkM/0.jpg" alt="Youtube Video"></a></p>
 </div>
 <div class="section level4">
-<h4 id="merge-multiple-seurat-object-if-necessary">Merge multiple Seurat object if necessary<a class="anchor" aria-label="anchor" href="#merge-multiple-seurat-object-if-necessary"></a>
+<h4 id="merge-multiple-seurat-objects-if-necessary">Merge multiple Seurat objects if necessary<a class="anchor" aria-label="anchor" href="#merge-multiple-seurat-objects-if-necessary"></a>
 </h4>
-<p>If you have dataset from multiple sub-regions, you can process all of
-them as it shown above and then merge them. For some reasons, some
-images may not have same background in different regions. You can simply
-detect the cells for each sub-regions with similar background or
-baseline, and then do GMM rescaled for each of them. After that, you can
-merge them by combining the analized results.</p>
+<p>If you have datasets from multiple sub-regions, you can process each
+one individually as shown above and then merge them. Occasionally, some
+images may not have the same background across different regions. To
+address this, you can detect the cells in each sub-region with a similar
+background or baseline and then perform GMM rescaling for each
+sub-region. Once this is done, you can combine the analyzed results to
+create a merged dataset.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tsv2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample2.qptiff.tsv.gz"</span>,</span>
 <span>                   package <span class="op">=</span> <span class="st">"cdQuPath"</span>,</span>
