@@ -308,13 +308,9 @@ write.csv(ct, file = celltype_csv, row.names = FALSE)
 ```
 [![Youtube Video](https://img.youtube.com/vi/OH8TKCxZKkM/0.jpg)](https://youtu.be/OH8TKCxZKkM)
 
-### Merge multiple Seurat object if necessary
+### Merge multiple Seurat objects if necessary
 
-If you have dataset from multiple sub-regions, you can process all of them as it shown above and then merge them.
-For some reasons, some images may not have same background in different regions.
-You can simply detect the cells for each sub-regions with similar background or baseline,
-and then do GMM rescaled for each of them.
-After that, you can merge them by combining the analized results.
+If you have datasets from multiple sub-regions, you can process each one individually as shown above and then merge them. Occasionally, some images may not have the same background across different regions. To address this, you can detect the cells in each sub-region with a similar background or baseline and then perform GMM rescaling for each sub-region. Once this is done, you can combine the analyzed results to create a merged dataset.
 
 ```{r runSample2}
 tsv2 <- system.file("extdata", "sample2.qptiff.tsv.gz",
