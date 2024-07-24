@@ -172,7 +172,7 @@ suppressMessages(
   FeaturePlot(seu, slot='count',
             features = rownames(seu)[1],
             reduction = 'pos',
-            ncol = 2)
+            ncol = 2) + scale_y_reverse()
 )
 ```
 
@@ -186,7 +186,7 @@ seu_norm <- loessSmooth(seu)
 FeaturePlot(seu_norm, slot='count',
             features = rownames(seu)[1],
             reduction = 'pos',
-            ncol = 2)
+            ncol = 2) + scale_y_reverse()
 ```
 
 The next step involves cell-wise normalization. The available normalization methods are 'LogNormalize', 'CLR' (centered log ratio), 'RC' (CPM), and 'zscore', which can be applied using the `normData` function. The normalization method except for 'zscore' is borrowed from `Seurat` package.
@@ -290,12 +290,12 @@ seu <- detectCellType(seu)
 table(seu$celltype)
 ## check the cell type annotation by clusters
 DimPlot(seu, group.by = 'celltype')
-DimPlot(seu, group.by = 'celltype', reduction = 'pos')
+DimPlot(seu, group.by = 'celltype', reduction = 'pos') + scale_y_reverse()
 dittoBarPlot(seu,
              var = 'celltype',
              group.by='Cell.isMultiNucleis')
 ## check the first annotation of each cell, not restricted by seurat_cluster
-DimPlot(seu, group.by = 'celltype_first', reduction = 'pos')
+DimPlot(seu, group.by = 'celltype_first', reduction = 'pos') + scale_y_reverse()
 dittoBarPlot(seu,
              var = 'celltype_first',
              group.by='Cell.isMultiNucleis')
@@ -348,8 +348,8 @@ dittoBarPlot(mergedSeu,
 FeaturePlot(mergedSeu, slot='count',
             features = rownames(mergedSeu)[1],
             reduction = 'pos',
-            ncol = 2)
-DimPlot(mergedSeu, group.by = 'celltype', reduction = 'pos')
+            ncol = 2) + scale_y_reverse()
+DimPlot(mergedSeu, group.by = 'celltype', reduction = 'pos') + scale_y_reverse()
 ## use GMM rescaled data to plot the correlation
 DefaultAssay(mergedSeu) <- 'GMM'
 p_GMM <- markerCorrelation(mergedSeu, layers = 'data')
