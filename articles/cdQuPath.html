@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Jianhong
 Ou</h4>
             
-            <h4 data-toc-skip class="date">23 July 2024</h4>
+            <h4 data-toc-skip class="date">24 July 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/main/vignettes/cdQuPath.Rmd" class="external-link"><code>vignettes/cdQuPath.Rmd</code></a></small>
       <div class="hidden name"><code>cdQuPath.Rmd</code></div>
@@ -304,7 +304,7 @@ data of cells is contained within the reduction matrix labeled
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span><span class="va">seu</span>, slot<span class="op">=</span><span class="st">'count'</span>,</span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span>,</span>
-<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/regionCheck-1.png" width="700"></p>
 <p>You may attempt to normalize the irregular sub-regions using LOESS
@@ -318,7 +318,7 @@ function.</p>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span><span class="va">seu_norm</span>, slot<span class="op">=</span><span class="st">'count'</span>,</span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span>,</span>
-<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The next step involves cell-wise normalization. The available
 normalization methods are ‘LogNormalize’, ‘CLR’ (centered log ratio),
 ‘RC’ (CPM), and ‘zscore’, which can be applied using the
@@ -481,7 +481,7 @@ assignment.</p>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/celltype-1.png" width="700"></p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/celltype-2.png" width="700"></p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
@@ -490,7 +490,7 @@ assignment.</p>
 <p><img src="cdQuPath_files/figure-html/celltype-3.png" width="700"></p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the first annotation of each cell, not restricted by seurat_cluster</span></span>
-<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype_first'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype_first'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/celltype-4.png" width="700"></p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
@@ -585,10 +585,10 @@ create a merged dataset.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>, slot<span class="op">=</span><span class="st">'count'</span>,</span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span>,</span>
-<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/runSample2-2.png" width="700"></p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/runSample2-3.png" width="700"></p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## use GMM rescaled data to plot the correlation</span></span>
@@ -715,7 +715,7 @@ Biobase_2.65.0<br>
 [19] BiocStyle_2.33.1</p>
 <p>loaded via a namespace (and not attached): [1] RcppAnnoy_0.0.22
 splines_4.4.1 later_1.3.2<br>
-[4] tibble_3.2.1 polyclip_1.10-6 fastDummies_1.7.3<br>
+[4] tibble_3.2.1 polyclip_1.10-7 fastDummies_1.7.3<br>
 [7] lifecycle_1.0.4 doParallel_1.0.17 globals_0.16.3<br>
 [10] lattice_0.22-6 MASS_7.3-61 magrittr_2.0.3<br>
 [13] plotly_4.10.4 sass_0.4.9 rmarkdown_2.27<br>
