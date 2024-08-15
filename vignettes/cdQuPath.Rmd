@@ -178,7 +178,7 @@ suppressMessages(
 
 You may attempt to normalize the irregular sub-regions using LOESS (Local Polynomial Regression Fitting) with the `loessSmooth` function.
 
-```{r loessSmooth, eval=FALSE}
+```{r loessSmooth, eval=FALSE, echo=FALSE, results="hide", warning=FALSE}
 ## this script will not run in the vignette.
 ## it is time consuming.
 ## under-development, do not try
