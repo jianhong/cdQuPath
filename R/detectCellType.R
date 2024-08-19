@@ -3,10 +3,13 @@
 #' Assign cell types by given cell markers.
 #' 
 #' @param seu A Seurat object.
-#' @param classifier A character vector of the cell type assignment markers. 
-#' The names of the classifier is the cell type and the content of the 
+#' @param classifier A character vector of the cell type assignment markers 
+#' or a list of celltypes.
+#' If it is a character vector, 
+#' the names of the classifier is the cell type and the content of the 
 #' classifier is the markers. The order of the classifier is the priority of
 #' assignment for `celltype_first` column in output metadata.
+#' The list example please see CodexPredefined$classifier2
 #' @param method The cell type assignment method. 
 #' First the function will convert the probabilities
 #' to positive or negative value by cutoff 0.5.
@@ -34,27 +37,69 @@ detectCellType <- function(
   stopifnot('Please run fitGMM first.'=
               CodexPredefined$GMM %in% SeuratObject::Assays(seu))
   stopifnot('Please run FindClusters.'='seurat_clusters' %in% colnames(seu[[]]))
-  stopifnot(is.character(classifier))
+  stopifnot(is.character(classifier) || is.list(classifier))
   stopifnot(length(names(classifier))==length(classifier))
   dat <- GetAssayData(seu, assay = CodexPredefined$GMM, layer = 'data')
-  classifier <- classifier[classifier %in% rownames(dat)]
-  stopifnot('No marker is available in Seurat object.'=length(classifier)>0)
-  if(method=='Boolean'){
-    dat <- dat>cutoff
-  }
-  dat <- dat[classifier, , drop=FALSE]
-  if(method=='Boolean'){
+  rownames(dat) <- toupper(rownames(dat))
+  if(is.list(classifier)){
+    stopifnot(all(c('positive', 'negative') %in% names(classifier)))
+    ## create score table
+    cn <- unique(unlist(lapply(classifier, names)))
+    scoreTable <- matrix(0, nrow = nrow(dat), ncol = length(cn))
+    rownames(scoreTable) <- rownames(dat)
+    colnames(scoreTable) <- cn
+    classifier <- lapply(classifier, function(.ele){
+      .ele <- mapply(.ele, names(.ele),
+                     FUN = function(.e, .n){
+        if(length(.e$symbol)==0 || length(.e$weight)==0){
+          stop('Each classifier must have symbol and weight')
+        }
+        .w <- .e$weight
+        .e <- toupper(.e$symbol)
+        keep <- .e %in% rownames(scoreTable)
+        this.scoreTable <- scoreTable
+        if(sum(keep)>0) {
+          this.scoreTable[.e[keep], .n] <- .w[keep] ## length(.n)==1
+        }
+        this.scoreTable
+      }, SIMPLIFY = FALSE)
+      if(length(.ele)>1) {
+        .ele <- Reduce(`+`, .ele)
+      }else{
+        .ele[[1]]
+      }
+    })
+    classifier <- classifier$positive - classifier$negative
+    if(method=='Boolean'){
+      dat <- dat>cutoff
+    }
     celltype <- apply(dat, 2, function(.e){
-      names(classifier[.e])
-    }, simplify = FALSE)
-  }else{## method is Rank
-    celltype <- apply(dat, 2, function(.e){
-      w <- which(.e>cutoff)
-      if(length(w)==0) w <- which(.e == max(.e, na.rm=TRUE))
-      w <- names(classifier)[w]
-      n <- names(classifier)[order(.e, decreasing = TRUE)]
-      n[n %in% w]
-    }, simplify = FALSE)
+      scoreTbl <- colSums(classifier*.e)
+      .keep <- scoreTbl>0
+      classifier <- classifier[, .keep]
+      scoreTbl <- scoreTbl[.keep]
+      colnames(classifier[, order(scoreTbl, decreasing = TRUE), drop=FALSE])
+    })
+  }else{
+    classifier <- toupper(classifier)
+    classifier <- classifier[classifier %in% rownames(dat)]
+    stopifnot('No marker is available in Seurat object.'=length(classifier)>0)
+    dat <- dat[classifier, , drop=FALSE]
+    
+    if(method=='Boolean'){
+      dat <- dat>cutoff
+      celltype <- apply(dat, 2, function(.e){
+        names(classifier[.e])
+      }, simplify = FALSE)
+    }else{## method is Rank
+      celltype <- apply(dat, 2, function(.e){
+        w <- which(.e>cutoff)
+        #if(length(w)==0) w <- which(.e == max(.e, na.rm=TRUE))
+        w <- names(classifier)[w]
+        n <- names(classifier)[order(.e, decreasing = TRUE)]
+        n[n %in% w]
+      }, simplify = FALSE)
+    }
   }
   ## assign unknown cell type
   celltype[lengths(celltype)==0] <- rep('unknown', sum(lengths(celltype)==0))

@@ -15,10 +15,13 @@ detectCellType(
 \arguments{
 \item{seu}{A Seurat object.}
 
-\item{classifier}{A character vector of the cell type assignment markers.
-The names of the classifier is the cell type and the content of the
+\item{classifier}{A character vector of the cell type assignment markers
+or a list of celltypes.
+If it is a character vector,
+the names of the classifier is the cell type and the content of the
 classifier is the markers. The order of the classifier is the priority of
-assignment for \code{celltype_first} column in output metadata.}
+assignment for \code{celltype_first} column in output metadata.
+The list example please see CodexPredefined$classifier2}
 
 \item{method}{The cell type assignment method.
 First the function will convert the probabilities

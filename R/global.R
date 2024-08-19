@@ -53,6 +53,42 @@ CodexPredefined <- list(
     "B CELLS"                    = 'cd19',
     "Endothelial"                = 'cd34',
     "Pericyte/Fibroblast"        = 'asma'
+  ),
+  classifier2 = list(
+    positive = list(
+      'B cell'                   = list( 
+        symbol = c('cd45', 'cd19'), weight = c(1/2, 1/2)),
+      'T cell'                   = list( 
+        symbol = c('CD4'), weight = c(1)),
+      'CD4_TFH'                   = list( 
+        symbol = c('CD4', 'pd1'), weight = c(1/2, 1/2)),
+      'T-reg'                   = list( 
+        symbol = c('CD4', 'foxp3', 'pd1'), weight = c(1/3, 1/3, 1/3)),
+      'CD8 T-cell'              = list( 
+        symbol = c('cd8'), weight = c(1)),
+      'Dendritic cell'          = list( 
+        symbol = c('CD11C'), weight = c(1)),
+      'NK'                      = list( 
+        symbol = c('cd57'), weight = c(1)),
+      'Macrophage'              = list( 
+        symbol = c('cd68'), weight = c(1)),
+      'M2 macrophage'           = list( 
+        symbol = c('cd68', 'CD163'), weight = c(1/2, 1/2)),
+      'HSC'                     = list( 
+        symbol = c('cd45'), weight = c(1)),
+      'cd45+lcp1'               = list( 
+        symbol = c('cd45', 'lcp1'), weight = c(1/2, 1/2)),
+      'Monocyte'                = list( 
+        symbol = c('CD14'), weight = c(1)),
+      'Stromal'                = list( 
+        symbol = c('cd34', 'asma'), weight = c(1/2, 1/2)),
+      'Tumour'                = list( 
+        symbol = c('sox9', 'ki67'), weight = c(1/2, 1/2))
+    ),
+    negative = list(
+      'Tumour'                = list(
+        symbol = c('cd45'), weight = c(1))
+    )
   )
 )
 

@@ -33,9 +33,9 @@ def classIndex = 1
 
 def headerRow = csvData[0]
 headerRow.eachWithIndex { value, index ->
-    if (value == 'Object.ID') {
+    if (value.replaceAll("\"", "") == 'Object.ID') {
         objectIdIndex = index
-    } else if (value == 'Class') {
+    } else if (value.replaceAll("\"", "") == 'CellType') {
         classIndex = index
     }
 }

@@ -143,6 +143,8 @@ VlnPlot(seu,
         split.by = 'Cell.isMultiNucleis',
         pt.size = ifelse(ncol(seu)>500, 0, 1),
         ncol = 3)
+## if you want to save the plot, try
+## ggsave(filename)
 ```
 ```{r vlnPlot2}
 VlnPlot(seu, features = c('cd68', 'CD11c', 'cd34'),
@@ -171,8 +173,7 @@ nrow(seu)
 suppressMessages(
   FeaturePlot(seu, slot='count',
             features = rownames(seu)[1],
-            reduction = 'pos',
-            ncol = 2) + scale_y_reverse()
+            reduction = 'pos') + scale_y_reverse()
 )
 ```
 
@@ -248,7 +249,7 @@ VlnPlot(seu,
         pt.size = pt.size)
 ## Dot plot
 markers <- unique(FindAllMarkers(seu)$gene)
-DotPlot(seu, features = markers) + coord_flip()
+DotPlot(seu, features = markers, scale = FALSE) + coord_flip()
 ```
 
 ### Rescale data using Gaussian Mixture Model
@@ -257,7 +258,7 @@ In the downstream analysis, cell types are detected by fitting a multiple-class 
 
 ```{r gmm}
 seu <- fitGMM(seu)
-DotPlot(seu, features = markers, assay = 'GMM') + coord_flip()
+DotPlot(seu, features = markers, assay = 'GMM', scale = FALSE) + coord_flip()
 ```
 
 
@@ -299,9 +300,19 @@ DimPlot(seu, group.by = 'celltype_first', reduction = 'pos') + scale_y_reverse()
 dittoBarPlot(seu,
              var = 'celltype_first',
              group.by='Cell.isMultiNucleis')
+## check the signals for each celltype
+Idents(seu) <- 'celltype'
+DotPlot(seu, features = rownames(seu), scale = FALSE) + coord_flip() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 ## export the celltype
 ct <- data.frame(Object.ID=colnames(seu),
+                 x=seu$Cell.X,
+                 y=seu$Cell.Y,
                  CellType=seu$celltype)
+head(ct, n=2)
+## if you see postfix like _1, then run
+ct$Object.ID <- sub('_\\d+$', '', ct$Object.ID)
+## output to same folder: celltype_csv <- sub('qptiff.tsv', 'celltype.csv', tsv)
 celltype_csv <- tempfile(fileext = '.csv')
 write.csv(ct, file = celltype_csv, row.names = FALSE)
 ## after exporting, you can load the celltypes back to QuPath by running the script load_celltype.groovy in the scripts folder.
