@@ -17,6 +17,7 @@
 #' And option 'Boolean' will assign the cell type 
 #' by the order of classifier for the positive markers.
 #' @param cutoff The cutoff value for probabilities.
+#' @param celltypeColumnName The column name for celltype in the metadata.
 #' @param ... Not used.
 #' @return A Seurat object with metadata 
 #'  `celltype` (top celltype),
@@ -30,6 +31,7 @@ detectCellType <- function(
     classifier = CodexPredefined$classifier,
     method = c('Rank', 'Boolean'),
     cutoff = 0.5,
+    celltypeColumnName = 'celltype',
     ...
     ){
   method <- match.arg(method)
@@ -40,8 +42,13 @@ detectCellType <- function(
   stopifnot(is.character(classifier) || is.list(classifier))
   stopifnot(length(names(classifier))==length(classifier))
   dat <- GetAssayData(seu, assay = CodexPredefined$GMM, layer = 'data')
-  rownames(dat) <- toupper(rownames(dat))
-  if(is.list(classifier)){
+  if(is(classifier, 'gknn')){## knn classifier
+    celltype <- predictCelltypes(classifier=classifier,
+                                 data = dat)
+    seu[[celltypeColumnName]] <- celltype
+    return(seu)
+  }else if(is.list(classifier)){
+    rownames(dat) <- toupper(rownames(dat))
     stopifnot(all(c('positive', 'negative') %in% names(classifier)))
     ## create score table
     cn <- unique(unlist(lapply(classifier, names)))
@@ -81,6 +88,7 @@ detectCellType <- function(
       colnames(classifier[, order(scoreTbl, decreasing = TRUE), drop=FALSE])
     })
   }else{
+    rownames(dat) <- toupper(rownames(dat))
     classifier <- toupper(classifier)
     classifier <- classifier[classifier %in% rownames(dat)]
     stopifnot('No marker is available in Seurat object.'=length(classifier)>0)
@@ -135,7 +143,7 @@ detectCellType <- function(
                               FUN.VALUE = character(1L),
                               collapse=';')
   seu$celltype_first <- celltype_first
-  seu$celltype <- celltype1[seu$seurat_clusters, 'celltype']
+  seu[[celltypeColumnName]] <- celltype1[seu$seurat_clusters, 'celltype']
   
   return(seu)
 }

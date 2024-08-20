@@ -19,6 +19,7 @@ biocViews: CellBiology, Visualization, Clustering, SingleCell, Proteomics
 Depends:
     R (>= 4.3.0)
 Imports:
+    e1071,
     ggplot2,
     hoodscanR,
     MASS,

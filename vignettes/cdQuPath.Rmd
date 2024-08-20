@@ -350,7 +350,7 @@ seu2 <- detectCellType(seu2)
 seu2$pca <- NULL # to advoid different pca columns error.
 seu$orig.ident <- 'region1'
 seu2$orig.ident <- 'region2'
-mergedSeu <- merge(seu, seu2, merge.dr = TRUE)
+mergedSeu <- merge(x=seu, y=list(seu2), merge.dr = TRUE)
 mergedSeu
 Assays(mergedSeu)
 dittoBarPlot(mergedSeu,
@@ -368,6 +368,22 @@ p_GMM[['data']]
 ## 
 DefaultAssay(mergedSeu) <- 'RNA'
 ```
+
+### Detect the celltype by clissifier
+
+You can also try to detect the cell type by a generalized k-Nearest Neighbors Classifier.
+
+```{r celltypeDetection2, eval=FALSE}
+classifier <- readRDS(system.file('extdata', 'classifier.CSA.res0.3.rds', 
+                      package='cdQuPath'))
+## this request lots of memory.
+mergedSeu <- detectCellType(mergedSeu,
+               classifier=classifier,
+               celltypeColumnName='celltypeByKNN')
+## this does not work for test dataset.
+table(mergedSeu$celltypeByKNN)
+```
+
 
 
 ### Neighborhoods analysis

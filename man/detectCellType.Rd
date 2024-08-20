@@ -9,6 +9,7 @@ detectCellType(
   classifier = CodexPredefined$classifier,
   method = c("Rank", "Boolean"),
   cutoff = 0.5,
+  celltypeColumnName = "celltype",
   ...
 )
 }
@@ -31,6 +32,8 @@ And option 'Boolean' will assign the cell type
 by the order of classifier for the positive markers.}
 
 \item{cutoff}{The cutoff value for probabilities.}
+
+\item{celltypeColumnName}{The column name for celltype in the metadata.}
 
 \item{...}{Not used.}
 }
