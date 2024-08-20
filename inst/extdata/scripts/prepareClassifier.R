@@ -32,6 +32,7 @@ m1 <- lapply(markers[sapply(markers, function(.ele) any(.ele %in% rownames(dd)))
   colSums(dd[.ele[.ele %in% rownames(dd)], , drop=FALSE])
 })
 m1 <- do.call(rbind, m1)
+m1 <- log2(m1+1)
 rowSums(m1)
 seu1 <- CreateSeuratObject(m1)
 seu1 <- fitGMM(seu1)
@@ -51,5 +52,6 @@ celltypes <- c('0'='Fibroblastic',
                '10'='T/NK cells',
                '11'='Mast cells')
 cts <- celltypes[as.character(clusters)]
+gmm[is.na(gmm)] <- 0
 classifier <- buildClassifier(gmm, features = rownames(gmm), celltypes = cts)
 saveRDS(classifier, 'inst/extdata/classifier.CSA.res0.3.rds')
