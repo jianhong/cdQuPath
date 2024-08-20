@@ -44,7 +44,8 @@ buildClassifier <- function(data, features, celltypes){
     stop('The data must be normalized to [0, 1]')
   }
   data <- data.frame(data[, features], celltype=celltypes)
-  model <- gknn(celltype ~., data = data)
+  model <- gknn(celltype ~., scale = FALSE, data = data)
+  model$y <- factor(model$y)
   return(model)
 }
 

@@ -373,15 +373,17 @@ DefaultAssay(mergedSeu) <- 'RNA'
 
 You can also try to detect the cell type by a generalized k-Nearest Neighbors Classifier.
 
-```{r celltypeDetection2, eval=FALSE, echo=FALSE, results="hide", warning=FALSE}
+```{r celltypeDetection2}
 classifier <- readRDS(system.file('extdata', 'classifier.CSA.res0.3.rds', 
                       package='cdQuPath'))
 ## this request lots of memory.
 mergedSeu <- detectCellType(mergedSeu,
                classifier=classifier,
                celltypeColumnName='celltypeByKNN')
-## this does not work for test dataset.
 table(mergedSeu$celltypeByKNN)
+dittoBarPlot(mergedSeu,
+             var = 'celltypeByKNN',
+             group.by='orig.ident')
 ```
 
 
