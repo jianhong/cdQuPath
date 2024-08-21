@@ -1,4 +1,5 @@
-markers <- readRDS(system.files('extdata', 'markers.name.map.rds'), package='cdQuPath')
+markers <- readRDS(system.file('extdata', 'markers.name.map.rds',
+                                package='cdQuPath'))
 
 seu <- readRDS('/Users/ouj/Library/CloudStorage/Box-Box/Reanalysis_filteredcellsremoved/resolution 0.3/int.rds')
 clusters <- seu$seurat_clusters
@@ -19,8 +20,30 @@ seu$celltype <- as.character(cts)
 pseudo <- AggregateExpression(seu, assays = 'RNA', return.seurat = TRUE, group.by="celltype")
 d <- GetAssayData(pseudo, assay = 'RNA', layer = 'count')
 dim(d)
-dd <- d[m, ]
+dd <- d[c(m, 'IBSP'), ]
 dim(dd)
+dd1 <- as.matrix(dd)
+dd1 <- t(t(dd1)/colSums(dd1))
+colSums(dd1)
+library(ggplot2)
+library(reshape2)
+dd1 <- melt(dd1)
+colnames(dd1) <- c('marker', 'celltype', 'value')
+ggplot(dd1, aes(fill=marker, y=value, x=celltype)) + 
+  geom_bar(position="stack", stat="identity")
+ggsave('pattern.withIBSP.pdf')
+dd <- d[m, ]
+dd1 <- as.matrix(dd)
+dd1 <- t(t(dd1)/colSums(dd1))
+colSums(dd1)
+library(ggplot2)
+library(reshape2)
+dd1 <- melt(dd1)
+colnames(dd1) <- c('marker', 'celltype', 'percentage')
+ggplot(dd1, aes(fill=marker, y=percentage, x=celltype)) + 
+  geom_bar(position="stack", stat="identity")
+ggsave('pattern.withoutIBSP.pdf')
+
 m1 <- lapply(markers[sapply(markers, function(.ele) any(.ele %in% rownames(dd)))], function(.ele){
   colSums(dd[.ele[.ele %in% rownames(dd)], , drop=FALSE])
 })

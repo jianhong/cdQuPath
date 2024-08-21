@@ -38,17 +38,23 @@ detectCellType <- function(
   stopifnot(is(seu, 'Seurat'))
   stopifnot('Please run fitGMM first.'=
               CodexPredefined$GMM %in% SeuratObject::Assays(seu))
-  stopifnot('Please run FindClusters.'='seurat_clusters' %in% colnames(seu[[]]))
   stopifnot(is.character(classifier) || is.list(classifier))
   stopifnot(length(names(classifier))==length(classifier))
   dat <- GetAssayData(seu, assay = CodexPredefined$GMM, layer = 'data')
   if(is(classifier, 'gknn')){## knn classifier
     celltype <- predictCelltypes(classifier=classifier,
-                                 data = dat)
-    seu[[celltypeColumnName]] <- celltype
+                                 data = dat,
+                                 ...)
+    seu[[celltypeColumnName]] <- celltype$celltypes
+    if(!is.null(celltype$prob)){
+      Misc(seu, slot='celltype') <- celltype$prob
+    }
     return(seu)
-  }else if(is.list(classifier)){
-    rownames(dat) <- toupper(rownames(dat))
+  }
+  
+  stopifnot('Please run FindClusters.'='seurat_clusters' %in% colnames(seu[[]]))
+  rownames(dat) <- toupper(rownames(dat))
+  if(is.list(classifier)){
     stopifnot(all(c('positive', 'negative') %in% names(classifier)))
     ## create score table
     cn <- unique(unlist(lapply(classifier, names)))
@@ -88,7 +94,6 @@ detectCellType <- function(
       colnames(classifier[, order(scoreTbl, decreasing = TRUE), drop=FALSE])
     })
   }else{
-    rownames(dat) <- toupper(rownames(dat))
     classifier <- toupper(classifier)
     classifier <- classifier[classifier %in% rownames(dat)]
     stopifnot('No marker is available in Seurat object.'=length(classifier)>0)

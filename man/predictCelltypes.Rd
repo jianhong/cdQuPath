@@ -4,16 +4,19 @@
 \alias{predictCelltypes}
 \title{predict celltypes by gknn classifier}
 \usage{
-predictCelltypes(classifier, data)
+predictCelltypes(classifier, data, prob = FALSE)
 }
 \arguments{
 \item{classifier}{a gknn classifier exported by \link{buildClassifier}.}
 
 \item{data}{A data.frame, containing features for \link[e1071]{gknn}
 prediction.}
+
+\item{prob}{character specifying the return the class distribution for
+all k neighbors considered.}
 }
 \value{
-Celltype factors for each cell.
+A list with celltype factors for each cell and the probability.
 }
 \description{
 classify putative cell types by given classifier.

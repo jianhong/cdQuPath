@@ -23,6 +23,7 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(hoodscanR)
   library(SpatialExperiment)
+  library(dplyr)
 })
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
@@ -96,6 +97,7 @@ The cell locations are particularly useful for neighborhood analysis.
 ### Load library
 
 ```{r load_library}
+library(dplyr)
 library(cdQuPath)
 library(Seurat)
 library(ggplot2)
@@ -353,9 +355,23 @@ seu2$orig.ident <- 'region2'
 mergedSeu <- merge(x=seu, y=list(seu2), merge.dr = TRUE)
 mergedSeu
 Assays(mergedSeu)
-dittoBarPlot(mergedSeu,
+p <- dittoBarPlot(mergedSeu,
              var = 'celltype_first',
              group.by='orig.ident')
+p
+## pie chart
+plotData <- p$data %>%
+  dplyr::arrange(desc(label)) %>%
+  dplyr::group_by(grouping) %>%
+  dplyr::mutate(y_pos = cumsum(percent) - 0.5*percent)
+ggplot(plotData, aes(x="", y = percent, fill = label)) +
+  geom_bar(stat="identity", width = 1) +
+  geom_text(aes(y=y_pos, label=round(percent*100, digits = 2)), color = 'white') +
+  coord_polar(theta = 'y') +
+  facet_wrap(~grouping) +
+  theme_void() +
+  scale_fill_manual(values = dittoColors())
+
 FeaturePlot(mergedSeu, slot='count',
             features = rownames(mergedSeu)[1],
             reduction = 'pos',
@@ -369,7 +385,7 @@ p_GMM[['data']]
 DefaultAssay(mergedSeu) <- 'RNA'
 ```
 
-### Detect the celltype by clissifier
+### Detect the celltype by classifier
 
 You can also try to detect the cell type by a generalized k-Nearest Neighbors Classifier.
 
@@ -386,7 +402,42 @@ dittoBarPlot(mergedSeu,
              group.by='orig.ident')
 ```
 
+### Align the single cell RNAseq data to Codex data by KNN classifier
 
+Here is the sample code to create the classifier for your own data and
+align the single cell RNA-seq data to the Codex data.
+```{r alignCells}
+## read the protein-gene map from the Codex (protein level) to
+## transcriptome (gene level)
+markers <- readRDS(system.file('extdata', 'markers.name.map.rds',
+                                package='cdQuPath'))
+tail(markers)
+## load the scRNA-seq data
+# scRNAseqSeu <- readRDS('int.rds')
+## do cluster, set higher resolution to get more class
+# scRNAseqSeu <- FindNeighbors(scRNAseqSeu, dims = 1:20)
+## set a big resolution to split the cells into a big number of clusters.
+# scRNAseqSeu <- FindClusters(scRNAseqSeu, resolution = 100)
+## create a pseudobulking for each cluster
+# pseudo <- AggregateExpression(scRNAseqSeu, assays = "RNA",
+#                               return.seurat = TRUE,
+#                               group.by = c("seurat_clusters"))
+pseudo <- readRDS(system.file('extdata', 'pseudobulk.scRNAseq.rds',
+                              package='cdQuPath'))
+library(future.apply)
+plan(multisession)
+## will cost several mins
+classifier <- buildClassifierFromSeurat(pseudo,
+                                        markerList = markers)
+alignedCodex <- alignScRNAseqToCodex(codexSeu = mergedSeu,
+                                      scSeu = pseudo,
+                                      classifier = classifier)
+## plot any gene expression with DarkTheme()
+FeaturePlot(alignedCodex, slot='data',
+            features = rownames(pseudo)[1],
+            reduction = 'pos',
+            ncol = 2) + scale_y_reverse() + DarkTheme()
+```
 
 ### Neighborhoods analysis
 

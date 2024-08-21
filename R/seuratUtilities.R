@@ -126,14 +126,15 @@ markerCorrelation <- function(
 #' @importFrom MASS fitdistr
 #' @importFrom stats plnorm
 #' @importFrom SeuratObject CreateAssayObject GetAssayData
+#' @importFrom future.apply future_apply
 #' @export
-
 fitGMM <- function(
     seu,
     ...){
   stopifnot(is(seu, 'Seurat'))
-  dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay, layer = 'counts')
-  dat <- apply(dat, 1, function(marker){
+  dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay,
+                      layer = 'counts')
+  dat <- future_apply(dat, 1, function(marker){
     if(sum(marker)<2){
       # if only 1 counts or less, densityMclust will take forever.
       return(marker)

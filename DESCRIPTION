@@ -1,6 +1,6 @@
 Package: cdQuPath
 Title: Analysis tools for Codex PhenoCycler-Fusion images with QuPath and R
-Version: 0.99.0.4
+Version: 0.99.0.5
 Authors@R: 
     person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
@@ -20,6 +20,7 @@ Depends:
     R (>= 4.3.0)
 Imports:
     e1071,
+    future.apply,
     ggplot2,
     hoodscanR,
     MASS,
@@ -37,6 +38,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
+    dplyr,
     dittoSeq
 URL: https://github.com/jianhong/cdQuPath
 BugReports: https://github.com/jianhong/cdQuPath/issues

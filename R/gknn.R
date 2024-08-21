@@ -45,7 +45,7 @@ buildClassifier <- function(data, features, celltypes){
   }
   data <- data.frame(data[, features], celltype=celltypes)
   model <- gknn(celltype ~., scale = FALSE, data = data)
-  model$y <- factor(model$y)
+  if(!is.factor(model$y)) model$y <- factor(model$y)
   return(model)
 }
 
@@ -54,7 +54,9 @@ buildClassifier <- function(data, features, celltypes){
 #' @param classifier a gknn classifier exported by \link{buildClassifier}.
 #' @param data A data.frame, containing features for \link[e1071]{gknn}
 #'  prediction.
-#' @return Celltype factors for each cell.
+#' @param prob character specifying the return the class distribution for 
+#' all k neighbors considered.
+#' @return A list with celltype factors for each cell and the probability. 
 #' @export
 #' @importFrom stats predict
 #' @examples
@@ -65,9 +67,16 @@ buildClassifier <- function(data, features, celltypes){
 #' classifier <- buildClassifier(iris, colnames(iris)[1:4], iris$Species)
 #' predictCelltypes(classifier, iris[c(1, 51, 101), ])
 #' 
-predictCelltypes <- function(classifier, data){
+predictCelltypes <- function(classifier, data, prob=FALSE){
+  stopifnot(is.logical(prob))
   data <- buildFeatureVector(classifier = classifier,
                              data = data)
-  celltypes <- predict(classifier, data, type="class")
-  return(celltypes)
+  celltypes <- predict(classifier, data, type='class')
+  if(prob[1]) {
+    prob <- predict(classifier, data, type = 'prob') 
+  }else{
+    prob <- NULL
+  }
+  return(list(celltypes=celltypes,
+              prob=prob))
 }
