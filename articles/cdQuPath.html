@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Jianhong
 Ou</h4>
             
-            <h4 data-toc-skip class="date">21 August 2024</h4>
+            <h4 data-toc-skip class="date">22 August 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/main/vignettes/cdQuPath.Rmd" class="external-link"><code>vignettes/cdQuPath.Rmd</code></a></small>
       <div class="hidden name"><code>cdQuPath.Rmd</code></div>
@@ -414,7 +414,9 @@ multiple-class Gaussian Mixture Model (GMM) to the re-scaled data. The
 raw intensities are converted to probabilities, and a cutoff of 0.5 is
 set for cell type assignment.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fitGMM.html">fitGMM</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.apply.futureverse.org" class="external-link">future.apply</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span> <span class="co"># for multiple process.</span></span>
+<span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fitGMM.html">fitGMM</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html" class="external-link">DotPlot</a></span><span class="op">(</span><span class="va">seu</span>, features <span class="op">=</span> <span class="va">markers</span>, assay <span class="op">=</span> <span class="st">'GMM'</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/gmm-1.png" width="700"></p>
 </div>
@@ -751,7 +753,13 @@ communities.</p>
 </h4>
 <p>The Jaccard Index is a statistic used for gauging the similarity and
 diversity of sample sets. The Jaccard Index is defined as:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mo>+</mo><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>B</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{cooccurent\_celltype\_A\_and\_B}{count\_celltype\_A+count\_celltype\_B-cooccurent\_celltype\_A\_and\_B}</annotation></semantics></math></p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mo>+</mo><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>B</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{cooccurent\_celltype\_A\_and\_B}{count\_celltype\_A+count\_celltype\_B-cooccurent\_celltype\_A\_and\_B}</annotation></semantics></math>.</p>
+<p>This method are based on simple yet intuitive measures, such as
+counting the number of nearest neighbors of every cell and inspecting
+the proportion of different cell categories in a given distance.</p>
+<p>If you increase the maxgap, you should recalculate the nearest
+neighbor by increasing the numbers ob neighbors to hold all possible
+neighbors.</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">maxgap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">$</span><span class="va">Cell.Length.um</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
 <span><span class="va">ji</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JaccardIndex.html">JaccardIndex</a></span><span class="op">(</span><span class="va">spe</span>, maxgap <span class="op">=</span> <span class="va">maxgap</span><span class="op">)</span></span>
@@ -761,9 +769,14 @@ diversity of sample sets. The Jaccard Index is defined as:
 factors such as cell cluster, cell type, and etc, co-occur with each
 other at increasing distances across the tissue. The co-occurrence score
 is defined as:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="false" form="prefix">|</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><annotation encoding="application/x-tex">\frac{p(factor1|factor2)}{p(factor1)}</annotation></semantics></math></p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="false" form="prefix">|</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><annotation encoding="application/x-tex">\frac{p(factor1|factor2)}{p(factor1)p(factor2)}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## TODO</span></span></code></pre></div>
+<p>The p-value of co-occurence can be calculated based on permutation
+test or a more rigorous framework, the homogeneous multitype Poisson
+point process (PPP) or complete spatial randomness and independence
+(CSRI) by picking a specific value of the radius (r). To perform the
+analysis, you can refer to R-package <a href="https://www.bioconductor.org/packages/spicyR/" class="external-link">SpicyR</a> or <a href="https://github.com/sealx017/SpaceANOVA" class="external-link">SpaceANOVA</a>.</p>
 <p>The spatial score define the distance ratio among three factors. The
 spatial score is defined as:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>L</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{celltypeCenter\_distance\_to\_nearest\_celltypeRight}{celltypeCenter\_distance\_to\_nearest\_celltypeLeft}</annotation></semantics></math>.</p>
@@ -839,7 +852,7 @@ splines_4.4.1 later_1.3.2<br>
 [40] fitdistrplus_1.2-1 parallelly_1.38.0 pkgdown_2.1.0<br>
 [43] leiden_0.4.3.1 codetools_0.2-20 DelayedArray_0.31.11<br>
 [46] shape_1.4.6.1 tidyselect_1.2.1 UCSC.utils_1.1.0<br>
-[49] farver_2.1.2 spatstat.explore_3.3-1 jsonlite_1.8.8<br>
+[49] farver_2.1.2 spatstat.explore_3.3-2 jsonlite_1.8.8<br>
 [52] GetoptLong_1.0.5 e1071_1.7-14 progressr_0.14.0<br>
 [55] iterators_1.0.14 ggridges_0.5.6 survival_3.7-0<br>
 [58] systemfonts_1.1.0 foreach_1.5.2 tools_4.4.1<br>
