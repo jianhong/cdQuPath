@@ -221,6 +221,7 @@ loessSmooth <- function(
                         dims = c(m_x, m_y),
                         dimnames=list(seq.int(m_x),
                                       seq.int(m_y)))
+    mat[mat<=0] <- 1e-15 ## to avoid NaN
     # get the mean for normalize.
     mat <- normalize.loess(
       mat,
