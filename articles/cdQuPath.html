@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.6</span>
       </span>
     </div>
 
@@ -779,18 +779,29 @@ neighbors.</p>
 factors such as cell cluster, cell type, and etc, co-occur with each
 other at increasing distances across the tissue. The co-occurrence score
 is defined as:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="false" form="prefix">|</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><annotation encoding="application/x-tex">\frac{p(factor1|factor2)}{p(factor1)p(factor2)}</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="false" form="prefix">|</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>*</mo><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><annotation encoding="application/x-tex">\frac{p(factor1|factor2)}{p(factor1)*p(factor2)}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## TODO</span></span></code></pre></div>
-<p>The p-value of co-occurence can be calculated based on permutation
-test or a more rigorous framework, the homogeneous multitype Poisson
-point process (PPP) or complete spatial randomness and independence
-(CSRI) by picking a specific value of the radius (r). To perform the
-analysis, you can refer to R-package <a href="https://www.bioconductor.org/packages/spicyR/" class="external-link">SpicyR</a> or <a href="https://github.com/sealx017/SpaceANOVA" class="external-link">SpaceANOVA</a>.</p>
+<code class="sourceCode R"><span><span class="va">cooc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/coOccurrence.html">coOccurrence</a></span><span class="op">(</span><span class="va">mergedSeu</span>, maxRadius<span class="op">=</span><span class="fl">1000</span>, bin<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                     anno_col<span class="op">=</span><span class="st">'celltype'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq.int</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">20</span><span class="op">-</span><span class="fl">10</span>, y<span class="op">=</span><span class="va">cooc</span><span class="op">[</span>, <span class="st">'cell proportion'</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'distance'</span>, y<span class="op">=</span><span class="st">'proportion'</span><span class="op">)</span></span></code></pre></div>
+<p><img src="cdQuPath_files/figure-html/coOccurence-1.png" width="700"></p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plotData</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">)</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plotData</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Var1</span>, y<span class="op">=</span><span class="va">Var2</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'bin'</span>, y<span class="op">=</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"white"</span>, high <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="cdQuPath_files/figure-html/coOccurence-2.png" width="700">
+The p-value of co-occurence can be calculated based on permutation test
+or a more rigorous framework, the homogeneous multitype Poisson point
+process (PPP) or complete spatial randomness and independence (CSRI) by
+picking a specific value of the radius (r). To perform the analysis, you
+can refer to R-package <a href="https://www.bioconductor.org/packages/spicyR/" class="external-link">SpicyR</a> or <a href="https://github.com/sealx017/SpaceANOVA" class="external-link">SpaceANOVA</a>.</p>
 <p>The spatial score define the distance ratio among three factors. The
 spatial score is defined as:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>L</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{celltypeCenter\_distance\_to\_nearest\_celltypeRight}{celltypeCenter\_distance\_to\_nearest\_celltypeLeft}</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## need to increase the neighbors number</span></span>
 <span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/neighborhoodsAna.html">neighborhoodsAna</a></span><span class="op">(</span><span class="va">mergedSeu</span>, clusterK <span class="op">=</span> <span class="va">clusterK</span>,</span>
 <span>                        k <span class="op">=</span> <span class="fl">500</span>, <span class="co">## maximal 500 neighbors</span></span>
@@ -807,7 +818,7 @@ spatial score is defined as:
 <span><span class="co">## 6aa7e11c-19e1-4a15-b92d-cea75093ffae     2.320486 188.2077  81.10703</span></span>
 <span><span class="co">## 22845794-ab72-4356-a185-87d7427e81a7     2.524645 380.9258 150.88294</span></span>
 <span><span class="co">## 0944dbdc-b761-4469-bd24-1f8fc1742e50     2.449444 111.8723  45.67253</span></span></code></pre>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="va">ss</span><span class="op">$</span><span class="va">spatialScore</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/spatialScore-1.png" width="700"></p>
 </div>
@@ -816,7 +827,7 @@ spatial score is defined as:
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>R version 4.4.1 (2024-06-14) Platform: x86_64-pc-linux-gnu Running
 under: Ubuntu 22.04.4 LTS</p>
@@ -844,7 +855,7 @@ Biobase_2.65.0 GenomicRanges_1.57.1<br>
 [15] hoodscanR_1.3.3 dittoSeq_1.17.0<br>
 [17] ggplot2_3.5.1 Seurat_5.1.0<br>
 [19] SeuratObject_5.0.2 sp_2.1-4<br>
-[21] cdQuPath_0.99.0.5 BiocStyle_2.33.1</p>
+[21] cdQuPath_0.99.0.6 BiocStyle_2.33.1</p>
 <p>loaded via a namespace (and not attached): [1] RcppAnnoy_0.0.22
 splines_4.4.1 later_1.3.2<br>
 [4] tibble_3.2.1 polyclip_1.10-7 fastDummies_1.7.4<br>
