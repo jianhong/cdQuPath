@@ -102,7 +102,7 @@ coOccurrence <- function(seu,
   # find the cell pairs in each bin
   breaks <- seq(minRadius, maxRadius,
                 length.out = bins)
-  breaks[bins+1] <- maxEuclideanDistance+1
+  breaks[bins+1] <- maxRadius+1
   cd$bin <- findInterval(cd$distance, breaks)
   cd$anno1 <- as.character(seu[[anno_col]][cd$N1, anno_col])
   cd$anno2 <- as.character(seu[[anno_col]][cd$N2, anno_col])
