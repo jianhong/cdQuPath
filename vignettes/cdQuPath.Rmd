@@ -485,10 +485,18 @@ plotJaccardIndex(ji)
 ```
 
 
-The co-occurrence score gives us an indication on whether given two factors such as cell cluster, cell type, and etc, co-occur with each other at increasing distances across the tissue. The co-occurrence score is defined as: $\frac{p(factor1|factor2)}{p(factor1)p(factor2)}$.
+The co-occurrence score gives us an indication on whether given two factors such as cell cluster, cell type, and etc, co-occur with each other at increasing distances across the tissue. The co-occurrence score is defined as: $\frac{p(factor1|factor2)}{p(factor1)*p(factor2)}$.
 
 ```{r coOccurence}
-## TODO
+cooc <- coOccurrence(mergedSeu, maxRadius=1000, bin=50,
+                     anno_col='celltype')
+ggplot(data.frame(x=seq.int(nrow(cooc))*20-10, y=cooc[, 'cell proportion']),
+       aes(x, y)) + geom_line() + theme_classic() +
+  labs(x='distance', y='proportion')
+plotData <- reshape2::melt(cooc[-nrow(cooc), -1])
+ggplot(plotData, aes(x=Var1, y=Var2, fill = value))+
+  geom_tile() + labs(x='bin', y='') +
+  scale_fill_gradient(low = "white", high = "red")
 ```
 The p-value of co-occurence can be calculated based on permutation test or a more rigorous framework, the homogeneous multitype Poisson point process (PPP) or complete spatial randomness and independence (CSRI) by picking a specific value of the radius (r). To perform the analysis, you can refer to R-package [SpicyR](https://www.bioconductor.org/packages/spicyR/) or [SpaceANOVA](https://github.com/sealx017/SpaceANOVA).
 
