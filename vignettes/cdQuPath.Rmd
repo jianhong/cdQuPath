@@ -406,8 +406,12 @@ dittoBarPlot(mergedSeu,
 
 ### Align the single cell RNAseq data to Codex data by KNN classifier
 
-Here is the sample code to create the classifier for your own data and
-align the single cell RNA-seq data to the Codex data.
+Below is sample code to create a classifier for your data and align single-cell RNA-seq data with Codex data.
+
+Codex data has a limited number of cell markers compared to the 10,000+ features detected by single-cell RNA-seq. To align the scRNA-seq matrix with the Codex matrix, it is crucial to minimize the effects of sparsity, noise, and collinearity among individual cells. This is achieved by performing distance calculations using pseudobulk analysis, which aggregates gene expression from individual cells into group-level values. By treating each group as a single cell, this approach reduces heterogeneity within cell clusters.
+
+The resulting alignment matrix enables the prediction of transcriptomes using Codex spatial information.
+
 ```{r alignCells}
 ## read the protein-gene map from the Codex (protein level) to
 ## transcriptome (gene level)
