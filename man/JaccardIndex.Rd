@@ -4,14 +4,30 @@
 \alias{JaccardIndex}
 \title{Calculate Jaccard Index}
 \usage{
-JaccardIndex(spe, maxgap = Inf, ...)
+JaccardIndex(
+  seu,
+  anno_col,
+  maxRadius,
+  spatialCoordsNames = c("Cell.X", "Cell.Y"),
+  celldist,
+  ...
+)
 }
 \arguments{
-\item{spe}{Output of \link{neighborhoodsAna}. An object of SpatialExperiment.}
+\item{seu}{An object of Seurat.}
 
-\item{maxgap}{Maximal distance of the neighbors.}
+\item{anno_col}{The annotation column used to define the factors.}
+
+\item{maxRadius}{Maximal Euclidean distance of the neighbors.}
+
+\item{spatialCoordsNames}{The column names of coordinates}
+
+\item{celldist}{Output of \link{findNearCellsByRadius}}
 
 \item{...}{not used.}
+}
+\value{
+A data.frame with column names of 'A', 'B' and 'JaccardIndex'
 }
 \description{
 Calculate Jaccard Index

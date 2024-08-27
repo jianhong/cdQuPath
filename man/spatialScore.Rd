@@ -4,13 +4,31 @@
 \alias{spatialScore}
 \title{Calculate spatial score}
 \usage{
-spatialScore(spe, celltypeCenter, celltypeLeft, celltypeRight, ...)
+spatialScore(
+  seu,
+  celltypeCenter,
+  celltypeLeft,
+  celltypeRight,
+  anno_col = "celltype",
+  maxRadius = 1000,
+  spatialCoordsNames = c("Cell.X", "Cell.Y"),
+  celldist,
+  ...
+)
 }
 \arguments{
-\item{spe}{Output of \link{neighborhoodsAna}. An object of SpatialExperiment.}
+\item{seu}{An seurat object}
 
 \item{celltypeCenter, celltypeLeft, celltypeRight}{The celltype for center,
 left and right.}
+
+\item{anno_col}{The annotation column used to define the factors.}
+
+\item{maxRadius}{Minimal and maximal radius}
+
+\item{spatialCoordsNames}{The column names of coordinates}
+
+\item{celldist}{Output of \link{findNearCellsByRadius}}
 
 \item{...}{not used.}
 }

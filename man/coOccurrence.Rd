@@ -10,7 +10,9 @@ coOccurrence(
   minRadius = 0,
   maxRadius = 1000,
   bins = 100,
-  spatialCoordsNames = c("Cell.X", "Cell.Y")
+  spatialCoordsNames = c("Cell.X", "Cell.Y"),
+  celldist,
+  ...
 )
 }
 \arguments{
@@ -23,6 +25,10 @@ coOccurrence(
 \item{bins}{The number of the bins}
 
 \item{spatialCoordsNames}{The column names of coordinates}
+
+\item{celldist}{Output of \link{findNearCellsByRadius}}
+
+\item{...}{not used.}
 }
 \value{
 A data matrix contain the cell proportion and co-occurrence for

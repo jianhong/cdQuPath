@@ -1,40 +1,38 @@
 #' Calculate Jaccard Index
-#' @param spe Output of \link{neighborhoodsAna}. An object of SpatialExperiment.
-#' @param maxgap Maximal distance of the neighbors.
+#' @param seu An object of Seurat.
+#' @param anno_col The annotation column used to define the factors.
+#' @param maxRadius Maximal Euclidean distance of the neighbors.
+#' @param spatialCoordsNames The column names of coordinates
+#' @param celldist Output of \link{findNearCellsByRadius}
 #' @param ... not used.
-#' @importFrom SummarizedExperiment colData
+#' @return A data.frame with column names of 'A', 'B' and 'JaccardIndex'
 #' @importFrom S4Vectors metadata
 #' @importFrom utils combn
 #' @export
 JaccardIndex <- function(
-    spe,
-    maxgap=Inf,
+    seu,
+    anno_col,
+    maxRadius,
+    spatialCoordsNames = c('Cell.X', 'Cell.Y'),
+    celldist,
     ...){
-  stopifnot(is(spe, 'SpatialExperiment'))
-  stopifnot(is.numeric(maxgap))
-  fnc <- metadata(spe)
-  stopifnot('spe must be output of neighborhoodsAna' = 
-              all(c('cells', 'distance', 'anno_col', 'k') %in% names(fnc)))
-  cd <- colData(spe)
-  celltypes <- unique(cd[, fnc$anno_col])
-  celltypes_counts <- table(cd[, fnc$anno_col])
-  neighbors <- fnc$cells
-  neighbors[fnc$distance>maxgap] <- NA
-  cmbn <- combn(celltypes, m=2, simplify = FALSE)
+  stopifnot(is(seu, 'Seurat'))
+  celldist <- checkCellDistInput(seu, anno_col, celldist, maxRadius,
+                                 spatialCoordsNames)
+  cmbn <- getAnnoCombn(seu, anno_col)
+  cellcnt <- getCelltypeCounts(celldist, cmbn, seu, anno_col)
   ji <- lapply(cmbn, function(.ele){
-    A <- celltypes_counts[.ele[1]]
-    B <- celltypes_counts[.ele[2]]
-    A_and_B <- apply(neighbors[rownames(cd)[cd[,fnc$anno_col]==.ele[1]], ],
-                     1, FUN = function(nc){
-                       .ele[2] %in% nc
-                     })
-    sum(A_and_B)/(A+B-sum(A_and_B))
+    A <- cellcnt$each$counts[.ele[1]]
+    B <- cellcnt$each$counts[.ele[2]]
+    A_and_B <- cellcnt$pair$counts[paste(.ele, collapse = ' & '), ]
+    A_and_B <- min(A_and_B)
+    A_and_B/(A+B-A_and_B)
   })
   cmbn <- do.call(rbind, cmbn)
   cmbn <- data.frame(cmbn)
   colnames(cmbn) <- c('A', 'B')
-  cmbn$JaccardIndex <- ji
-  cmbn
+  cmbn$JaccardIndex <- unlist(ji)
+  return(cmbn)
 }
 #' Plot a heatmap for JaccardIndex output
 #' @param ji output of \link{JaccardIndex}
