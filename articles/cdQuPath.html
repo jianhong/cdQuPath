@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.7</span>
       </span>
     </div>
 
@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Jianhong
 Ou</h4>
             
-            <h4 data-toc-skip class="date">23 August 2024</h4>
+            <h4 data-toc-skip class="date">27 August 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/main/vignettes/cdQuPath.Rmd" class="external-link"><code>vignettes/cdQuPath.Rmd</code></a></small>
       <div class="hidden name"><code>cdQuPath.Rmd</code></div>
@@ -766,29 +766,40 @@ diversity of sample sets. The Jaccard Index is defined as:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow><mrow><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mo>+</mo><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>B</mi><mo>−</mo><mi>c</mi><mi>o</mi><mi>o</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>_</mi><mi>A</mi><mi>_</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>_</mi><mi>B</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{cooccurent\_celltype\_A\_and\_B}{count\_celltype\_A+count\_celltype\_B-cooccurent\_celltype\_A\_and\_B}</annotation></semantics></math>.</p>
 <p>This method are based on simple yet intuitive measures, such as
 counting the number of nearest neighbors of every cell and inspecting
-the proportion of different cell categories in a given distance.</p>
-<p>If you increase the maxgap, you should recalculate the nearest
-neighbor by increasing the numbers ob neighbors to hold all possible
-neighbors.</p>
+the proportion of different cell categories in a given Euclidean (2 norm
+aka
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>2</mn></msub><annotation encoding="application/x-tex">L_2</annotation></semantics></math>)
+distance
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>y</mi><mi>i</mi></msub></mrow><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{\sum_{i}{(x_i - y_i})^2}</annotation></semantics></math>,
+the shortest distance).</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">maxgap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">$</span><span class="va">Cell.Length.um</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
-<span><span class="va">ji</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JaccardIndex.html">JaccardIndex</a></span><span class="op">(</span><span class="va">spe</span>, maxgap <span class="op">=</span> <span class="va">maxgap</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">## here we set two times of cell length as maximal gaps to check </span></span>
+<span><span class="co">## the cell co-location</span></span>
+<span><span class="va">maxgap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">$</span><span class="va">Cell.Length.um</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
+<span><span class="va">ji</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JaccardIndex.html">JaccardIndex</a></span><span class="op">(</span><span class="va">mergedSeu</span>, maxRadius <span class="op">=</span> <span class="va">maxgap</span>, anno_col<span class="op">=</span><span class="st">'celltype_first'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotJaccardIndex.html">plotJaccardIndex</a></span><span class="op">(</span><span class="va">ji</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The co-occurrence score gives us an indication on whether given two
 factors such as cell cluster, cell type, and etc, co-occur with each
-other at increasing distances across the tissue. The co-occurrence score
+other at specific distances across the tissue. The co-occurrence score
 is defined as:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="false" form="prefix">|</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>*</mo><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><annotation encoding="application/x-tex">\frac{p(factor1|factor2)}{p(factor1)*p(factor2)}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cooc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/coOccurrence.html">coOccurrence</a></span><span class="op">(</span><span class="va">mergedSeu</span>, maxRadius<span class="op">=</span><span class="fl">1000</span>, bin<span class="op">=</span><span class="fl">50</span>,</span>
-<span>                     anno_col<span class="op">=</span><span class="st">'celltype'</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">maxgap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">$</span><span class="va">Cell.Length.um</span><span class="op">)</span> <span class="op">*</span> <span class="fl">50</span></span>
+<span><span class="co">## precalculate cell distance to save time because we will use same maxgap for</span></span>
+<span><span class="co">## both coOccurrence and spatialScore</span></span>
+<span><span class="va">celldist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findNearCellsByRadius.html">findNearCellsByRadius</a></span><span class="op">(</span></span>
+<span>      seu<span class="op">=</span><span class="va">mergedSeu</span>,</span>
+<span>      maxRadius<span class="op">=</span><span class="va">maxgap</span><span class="op">)</span></span>
+<span><span class="va">cooc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/coOccurrence.html">coOccurrence</a></span><span class="op">(</span><span class="va">mergedSeu</span>, maxRadius<span class="op">=</span><span class="va">maxgap</span>, bin<span class="op">=</span><span class="fl">50</span>,</span>
+<span>                     anno_col<span class="op">=</span><span class="st">'celltype'</span>,</span>
+<span>                     celldist<span class="op">=</span><span class="va">celldist</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq.int</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">20</span><span class="op">-</span><span class="fl">10</span>, y<span class="op">=</span><span class="va">cooc</span><span class="op">[</span>, <span class="st">'cell proportion'</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'distance'</span>, y<span class="op">=</span><span class="st">'proportion'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/coOccurence-1.png" width="700"></p>
 <div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">plotData</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">)</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">plotData</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plotData</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Var1</span>, y<span class="op">=</span><span class="va">Var2</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'bin'</span>, y<span class="op">=</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"white"</span>, high <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
@@ -800,24 +811,26 @@ picking a specific value of the radius (r). To perform the analysis, you
 can refer to R-package <a href="https://www.bioconductor.org/packages/spicyR/" class="external-link">SpicyR</a> or <a href="https://github.com/sealx017/SpaceANOVA" class="external-link">SpaceANOVA</a>.</p>
 <p>The spatial score define the distance ratio among three factors. The
 spatial score is defined as:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>L</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{celltypeCenter\_distance\_to\_nearest\_celltypeRight}{celltypeCenter\_distance\_to\_nearest\_celltypeLeft}</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow><mrow><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>C</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>_</mi><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi>_</mi><mi>t</mi><mi>o</mi><mi>_</mi><mi>n</mi><mi>e</mi><mi>a</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>_</mi><mi>c</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>L</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{celltypeCenter\_distance\_to\_nearest\_celltypeRight}{celltypeCenter\_distance\_to\_nearest\_celltypeLeft}</annotation></semantics></math>.
+The high value indicates the left celltype is closer than the right
+celltype.</p>
 <div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## need to increase the neighbors number</span></span>
-<span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/neighborhoodsAna.html">neighborhoodsAna</a></span><span class="op">(</span><span class="va">mergedSeu</span>, clusterK <span class="op">=</span> <span class="va">clusterK</span>,</span>
-<span>                        k <span class="op">=</span> <span class="fl">500</span>, <span class="co">## maximal 500 neighbors</span></span>
-<span>                        anno_col <span class="op">=</span> <span class="st">'celltype_first'</span><span class="op">)</span></span>
-<span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/spatialScore.html">spatialScore</a></span><span class="op">(</span><span class="va">spe</span>,</span>
+<span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/spatialScore.html">spatialScore</a></span><span class="op">(</span><span class="va">mergedSeu</span>,</span>
 <span>                   celltypeCenter <span class="op">=</span> <span class="st">"M2 MACROPHAGE"</span>,</span>
 <span>                   celltypeLeft <span class="op">=</span> <span class="st">"Cytotoxic T Cells"</span>,</span>
-<span>                   celltypeRight <span class="op">=</span> <span class="st">"Tumor/Myeloid"</span><span class="op">)</span></span>
+<span>                   celltypeRight <span class="op">=</span> <span class="st">"Endothelial"</span>,</span>
+<span>                   anno_col <span class="op">=</span> <span class="st">'celltype_first'</span>,</span>
+<span>                   maxRadius<span class="op">=</span><span class="va">maxgap</span>,</span>
+<span>                   celldist<span class="op">=</span><span class="va">celldist</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ss</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                      spatialScore    distR     distL</span></span>
-<span><span class="co">## 8e6b7723-2547-4ad7-8bea-810ff6432fa4    13.374156 353.7328  26.44898</span></span>
-<span><span class="co">## aa7a6735-dfb3-480e-a8c1-efc7f45e136b    13.374156 353.7328  26.44898</span></span>
-<span><span class="co">## ec87b03d-aa83-4f5d-b9f5-654add3defc7    13.374156 353.7328  26.44898</span></span>
-<span><span class="co">## 6aa7e11c-19e1-4a15-b92d-cea75093ffae     2.320486 188.2077  81.10703</span></span>
-<span><span class="co">## 22845794-ab72-4356-a185-87d7427e81a7     2.524645 380.9258 150.88294</span></span>
-<span><span class="co">## 0944dbdc-b761-4469-bd24-1f8fc1742e50     2.449444 111.8723  45.67253</span></span></code></pre>
+<pre><code><span><span class="co">##                                   cell    dist.L    dist.R spatialScore</span></span>
+<span><span class="co">## 1 8e6b7723-2547-4ad7-8bea-810ff6432fa4  26.44898  77.70811    2.9380378</span></span>
+<span><span class="co">## 2 aa7a6735-dfb3-480e-a8c1-efc7f45e136b  26.44898  77.70811    2.9380378</span></span>
+<span><span class="co">## 3 ec87b03d-aa83-4f5d-b9f5-654add3defc7  26.44898  77.70811    2.9380378</span></span>
+<span><span class="co">## 4 6aa7e11c-19e1-4a15-b92d-cea75093ffae  81.10703 120.74000    1.4886503</span></span>
+<span><span class="co">## 5 22845794-ab72-4356-a185-87d7427e81a7 150.88294  28.37322    0.1880479</span></span>
+<span><span class="co">## 6 0944dbdc-b761-4469-bd24-1f8fc1742e50  45.67253 228.17035    4.9957895</span></span></code></pre>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="va">ss</span><span class="op">$</span><span class="va">spatialScore</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cdQuPath_files/figure-html/spatialScore-1.png" width="700"></p>
@@ -855,7 +868,7 @@ Biobase_2.65.0 GenomicRanges_1.57.1<br>
 [15] hoodscanR_1.3.3 dittoSeq_1.17.0<br>
 [17] ggplot2_3.5.1 Seurat_5.1.0<br>
 [19] SeuratObject_5.0.2 sp_2.1-4<br>
-[21] cdQuPath_0.99.0.6 BiocStyle_2.33.1</p>
+[21] cdQuPath_0.99.0.7 BiocStyle_2.33.1</p>
 <p>loaded via a namespace (and not attached): [1] RcppAnnoy_0.0.22
 splines_4.4.1 later_1.3.2<br>
 [4] tibble_3.2.1 polyclip_1.10-7 fastDummies_1.7.4<br>
@@ -896,7 +909,7 @@ splines_4.4.1 later_1.3.2<br>
 [109] zoo_1.8-12 stringr_1.5.1 KernSmooth_2.23-24<br>
 [112] parallel_4.4.1 miniUI_0.1.1.1 desc_1.4.3<br>
 [115] pillar_1.9.0 grid_4.4.1 vctrs_0.6.5<br>
-[118] RANN_2.6.1 promises_1.3.0 xtable_1.8-4<br>
+[118] RANN_2.6.2 promises_1.3.0 xtable_1.8-4<br>
 [121] cluster_2.1.6 evaluate_0.24.0 magick_2.8.4<br>
 [124] cli_3.6.3 compiler_4.4.1 rlang_1.1.4<br>
 [127] crayon_1.5.3 labeling_0.4.3 mclust_6.1.1<br>
