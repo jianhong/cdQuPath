@@ -368,7 +368,9 @@ plotData <- p$data %>%
   dplyr::mutate(y_pos = cumsum(percent) - 0.5*percent)
 ggplot(plotData, aes(x="", y = percent, fill = label)) +
   geom_bar(stat="identity", width = 1) +
-  geom_text(aes(y=y_pos, label=round(percent*100, digits = 2)), color = 'white') +
+  geom_text(aes(x=1.7, y=y_pos,
+                label=paste0(round(percent*100, digits = 1), '%')),
+            color = 'black') +
   coord_polar(theta = 'y') +
   facet_wrap(~grouping) +
   theme_void() +
