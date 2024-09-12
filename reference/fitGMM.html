@@ -19,7 +19,7 @@ Re-scaled values will be probabilities between 0-1."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.8</span>
       </span>
     </div>
 
@@ -57,7 +57,14 @@ Re-scaled values will be probabilities between 0-1.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fitGMM</span><span class="op">(</span><span class="va">seu</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fitGMM</span><span class="op">(</span></span>
+<span>  <span class="va">seu</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Rmixmod"</span>, <span class="st">"mclust"</span><span class="op">)</span>,</span>
+<span>  model <span class="op">=</span> <span class="fu">mixmodGaussianModel</span><span class="op">(</span>family <span class="op">=</span> <span class="st">"general"</span>, listModels <span class="op">=</span> <span class="st">"Gaussian_p_Lk_Ck"</span>,</span>
+<span>    free.proportions <span class="op">=</span> <span class="cn">FALSE</span>, equal.proportions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  max_zero_percentage <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -66,6 +73,23 @@ Re-scaled values will be probabilities between 0-1.</p>
 
 <dl><dt id="arg-seu">seu<a class="anchor" aria-label="anchor" href="#arg-seu"></a></dt>
 <dd><p>A Seurat object</p></dd>
+
+
+<dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
+<dd><p>The package used to do the GMM fit. Available tools are
+'Rmixmod' and 'mclust'.</p></dd>
+
+
+<dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
+<dd><p>If method is Rmixmod, the model will be used to fit the data.
+see <a href="https://rdrr.io/pkg/Rmixmod/man/mixmodGaussianModel.html" class="external-link">mixmodGaussianModel</a>.</p></dd>
+
+
+<dt id="arg-max-zero-percentage">max_zero_percentage<a class="anchor" aria-label="anchor" href="#arg-max-zero-percentage"></a></dt>
+<dd><p>The cutoff of zero percentage. If the percentage
+is greater than max_zero_percentage, the zeros will be removed by random
+pick to meet the max percentage. This is used to make sure there is enough
+variance to fit the model.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
