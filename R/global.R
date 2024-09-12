@@ -67,7 +67,7 @@ CodexPredefined <- list(
       'CD8 T-cell'              = list( 
         symbol = c('cd8'), weight = c(1)),
       'Dendritic cell'          = list( 
-        symbol = c('CD11C'), weight = c(1)),
+        symbol = c('CD11c'), weight = c(1)),
       'NK'                      = list( 
         symbol = c('cd57'), weight = c(1)),
       'Macrophage'              = list( 

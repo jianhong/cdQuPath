@@ -119,19 +119,36 @@ markerCorrelation <- function(
 #' variance, the function will trying to do log normal distribution re-scale.
 #' Re-scaled values will be probabilities between 0-1.
 #' @param seu A Seurat object
+#' @param method The package used to do the GMM fit. Available tools are 
+#' 'Rmixmod' and 'mclust'.
+#' @param model If method is Rmixmod, the model will be used to fit the data.
+#' see \link[Rmixmod]{mixmodGaussianModel}.
+#' @param max_zero_percentage The cutoff of zero percentage. If the percentage
+#' is greater than max_zero_percentage, the zeros will be removed by random
+#' pick to meet the max percentage. This is used to make sure there is enough
+#' variance to fit the model. 
 #' @param ... Not use.
 #' @return A Seurat object with a new assay named as 'GMM'. The re-scaled values
 #' saved in layer 'data'. 
 #' @importFrom mclust densityMclust cdfMclust
+#' @importFrom Rmixmod mixmodGaussianModel mixmodCluster
 #' @importFrom MASS fitdistr
 #' @importFrom stats plnorm
-#' @importFrom SeuratObject CreateAssayObject GetAssayData
+#' @importFrom SeuratObject CreateAssayObject GetAssayData JoinLayers
 #' @importFrom future.apply future_apply
 #' @export
 fitGMM <- function(
     seu,
+    method = c('Rmixmod', 'mclust'),
+    model = mixmodGaussianModel(
+      family = "general",
+      listModels = "Gaussian_p_Lk_Ck",
+      free.proportions = FALSE, equal.proportions = TRUE
+    ),
+    max_zero_percentage = 0.1,
     ...){
   stopifnot(is(seu, 'Seurat'))
+  method <- match.arg(method)
   dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay,
                       layer = 'counts')
   dat <- future_apply(dat, 1, function(marker){
@@ -139,37 +156,83 @@ fitGMM <- function(
       # if only 1 counts or less, densityMclust will take forever.
       return(marker)
     }
-    id <- order(marker)
-    y <- tryCatch(
-      {
-        dens <- densityMclust(
-          marker[id], plot = FALSE, verbose = FALSE)
-        cdf <- cdfMclust(dens, data=marker[id])
-        cdf$y[match(marker, marker[id])]
-      }, error=function(.e){
-        warning(.e,
-                ' Data may lack of variance.',
-                ' Trying log normal distribution rescale methods.')
-        x <- marker[id][marker[id]>0]
-        dens <- fitdistr(x,
-                         densfun = 'log-normal')
-        n <- table(log(x))
-        names(n) <- unique(sort(x))
-        p = cumsum(n)/sum(n)
-        cdf <- plnorm(p,
-                      meanlog = dens$estimate['meanlog'],
-                      sdlog = dens$estimate['sdlog'])
-        cdf <- cdf/max(cdf)
-        cdf <- c('0'=0, cdf)
-        cdf[match(marker, as.numeric(names(cdf)))]
+    if(any(marker<0)){
+      stop('Negative data detected!')
+    }
+    marker0 <- marker
+    marker <- sort(marker)
+    zero_indices <- which(marker == 0)
+    zero_percentage <- length(zero_indices) / length(marker)
+    if(zero_percentage>max_zero_percentage){
+      toberemoved <- floor(length(marker)*
+                             (zero_percentage - max_zero_percentage))
+      if(toberemoved>0){
+        marker <- marker[-seq.int(toberemoved)]
       }
-    )
+    }
+    if(method=='Rmixmod'){
+      dens <- mixmodCluster(marker, nbCluster=2,
+                                dataType="quantitative", models=model)
+      y <- predictMixModDensity(dens, data=marker)
+      y <- y[match(marker0, marker)]
+    }else{
+      y <- tryCatch(
+        {
+          dens <- densityMclust(
+            marker, plot = FALSE, verbose = FALSE)
+          cdf <- cdfMclust(dens, data=marker)
+          cdf$y[match(marker0, marker)]
+        }, error=function(.e){
+          warning(.e,
+                  ' Data may lack of variance.',
+                  ' Trying log normal distribution rescale methods.')
+          x <- marker[marker>0]
+          dens <- fitdistr(x,
+                           densfun = 'log-normal')
+          n <- table(log(x))
+          names(n) <- unique(sort(x))
+          p = cumsum(n)/sum(n)
+          cdf <- plnorm(p,
+                        meanlog = dens$estimate['meanlog'],
+                        sdlog = dens$estimate['sdlog'])
+          cdf <- cdf/max(cdf)
+          cdf <- c('0'=0, cdf)
+          cdf[match(marker0, as.numeric(names(cdf)))]
+        }
+      )
+    }
     y
   }, simplify = FALSE)
   dat <- do.call(rbind, dat)
   colnames(dat) <- colnames(seu)
   seu[[CodexPredefined$GMM]] <- CreateAssayObject(data = dat)
   return(seu)
+}
+
+predictMixModDensity <- function(dens, data){
+  if(length(dens@results)==0){
+    warning('Use simple model')
+    xroot <- mean(data)
+  }else{
+    parameters <- dens@results[[1]]@parameters
+    weight <- parameters@proportions
+    mus <- as.numeric(parameters@mean)
+    sigmas <- unlist(parameters@variance)
+    sigmas <- sigmas[order(mus)]
+    if(mus[1]==mus[2]){
+      xroot <- mus[1]
+    }else{
+      mus <- sort(mus)
+      a <- sum(c(-0.5, 0.5)/sigmas)
+      b <- mus[1] / sigmas[1] - mus[2] / sigmas[2]
+      c <- 0.5 * (-mus[1]^2 / sigmas[1] + mus[2]^2 / sigmas[2]) +
+        log(weight[1] / weight[2]) + 0.5 * log(sigmas[2] / sigmas[1])
+      xroot <- (-b - sqrt(b^2 - 4.0 * a * c)) / (2.0 * a)
+    }
+  }
+  exp_term <- exp(data  - xroot)
+  y <- exp_term / (1 + exp_term)
+  return((y - min(y)) / (max(y) - min(y)))
 }
 
 #' Normalize the signal by Loess

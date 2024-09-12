@@ -258,9 +258,12 @@ DotPlot(seu, features = markers, scale = FALSE) + coord_flip()
 
 In the downstream analysis, cell types are detected by fitting a multiple-class Gaussian Mixture Model (GMM) to the re-scaled data. The raw intensities are converted to probabilities, and a cutoff of 0.5 is set for cell type assignment.
 
+Please run `fitGMM` for each sub-region of the image if the background of the sub-regions are not identical.
+
 ```{r gmm}
 library(future.apply)
 plan(multisession) # for multiple process.
+set.seed(123) ## for model fit
 seu <- fitGMM(seu)
 DotPlot(seu, features = markers, assay = 'GMM', scale = FALSE) + coord_flip()
 ```
@@ -391,6 +394,26 @@ DefaultAssay(mergedSeu) <- 'RNA'
 
 ### Detect the celltype by classifier
 
+The simplest classifier is a list of markers.
+
+```{r}
+CodexPredefined$classifier
+```
+
+You can also try to detect the cell type by multiple markers with weight for 
+each celltype.
+
+```{r}
+CodexPredefined$classifier2
+mergedSeu <- detectCellType(mergedSeu,
+                            classifier = CodexPredefined$classifier2,
+                            celltypeColumnName = 'celltype2')
+dittoBarPlot(mergedSeu,
+             var = 'celltype2',
+             group.by='Cell.isMultiNucleis')
+```
+
+
 You can also try to detect the cell type by a generalized k-Nearest Neighbors Classifier.
 
 ```{r celltypeDetection2}
@@ -447,6 +470,78 @@ FeaturePlot(alignedCodex, slot='data',
             ncol = 2) + scale_y_reverse() + DarkTheme()
 ```
 
+### Detect the celltype by other tools
+
+Here we will show the sample code to detect the cell types by [CELESTA](https://github.com/plevritis-lab/CELESTA).
+
+```{r CELESTA, eval=FALSE}
+if (!require("CELESTA", quietly = TRUE)){
+  BiocManager::install("plevritis-lab/CELESTA")
+}
+library(CELESTA)
+library(zeallot)
+library(spdep)
+prior_marker_info <- matrix(0,
+                            nrow = length(CodexPredefined$classifier2$positive),
+                            ncol = nrow(mergedSeu),
+                            dimnames = list(
+                              names(CodexPredefined$classifier2$positive),
+                              rownames(mergedSeu)
+                            ))
+for(i in seq_along(CodexPredefined$classifier2$positive)){
+  prior_marker_info[names(CodexPredefined$classifier2$positive)[i],
+                    CodexPredefined$classifier2$positive[[i]]$symbol[
+                      CodexPredefined$classifier2$positive[[i]]$symbol %in%
+                        colnames(prior_marker_info)
+                    ]] <- 1
+}
+## reorder the celltype by lineage level
+prior_marker_info <- prior_marker_info[
+  c('Tumour', 'Stromal', 'HSC',
+    'NK', 'B cell', 'T cell', 'Monocyte',
+    'CD4_TFH', 'CD8 T-cell', 'T-reg',
+    'Macrophage', 'M2 macrophage', 'cd45+lcp1', 'Dendritic cell'), ]
+prior_marker_info <- cbind(
+  celltype = rownames(prior_marker_info),
+  Lineage_level=paste(c(1, 1, 1,
+                        2, 2, 2, 2,
+                        3, 3, 3,
+                        3, 3, 3, 3), ## lineage level
+                      c(0, 0, 0,
+                        3, 3, 3, 3,
+                        6, 6, 6,
+                        7, 7, 7, 7), ## lineage ancestor 
+                      c(1, 2, 3,
+                        4, 5, 6, 7,
+                        8, 9, 10,
+                        11, 12, 13, 14), ## index
+                      sep='_'),
+  data.frame(prior_marker_info))
+mergedSeu <- JoinLayers(mergedSeu)
+imageData <- GetAssayData(mergedSeu, assay = 'RNA', layer = 'data')
+imageData <- cbind(mergedSeu[[]], t(imageData))
+colnames(imageData)[colnames(imageData)=='Cell.X'] <- 'X'
+colnames(imageData)[colnames(imageData)=='Cell.Y'] <- 'Y'
+CelestaObj <- CreateCelestaObject(
+  project_title = "test",
+  prior_marker_info = prior_marker_info,
+  imaging_data = imageData)
+CelestaObj <- FilterCells(
+  CelestaObj, 
+  high_marker_threshold=0.9,
+  low_marker_threshold=0.1)
+CelestaObj <- AssignCells(
+  CelestaObj,
+  max_iteration=10,
+  cell_change_threshold=0.01)
+mergedSeu$celltypeCELESTA <- 
+  CelestaObj@final_cell_type_assignment[, 'Final cell type']
+dittoBarPlot(mergedSeu,
+             var = 'celltypeCELESTA',
+             group.by='orig.ident')
+```
+
+
 ### Neighborhoods analysis
 
 After annotating cell types, we can assess whether these annotations exhibit spatial enrichment and conduct analyses of cellular neighborhoods throughout the tissue. Here we borrow the power of `hoodscanR` to identifying interactions between spatial communities.
@@ -465,9 +560,9 @@ plotTissue(spe, color = perplexity) +
 # Plot the clusters for the probability matrix
 plotTissue(spe, color = clusters)
 # Plot heatmap for neighbourhood analysis
-plotColocal(spe, pm_cols = unique(spe$celltype))
+plotColocal(spe, pm_cols = unique(spe$celltype_first))
 # Plot probability distribution
-plotProbDist(spe, pm_cols = unique(spe$celltype), 
+plotProbDist(spe, pm_cols = unique(spe$celltype_first), 
              by_cluster = TRUE, plot_all = TRUE, 
              show_clusters = as.character(seq(clusterK)))
 ```
@@ -514,9 +609,9 @@ The spatial score define the distance ratio among three factors. The spatial sco
 ```{r spatialScore}
 ## need to increase the neighbors number
 ss <- spatialScore(mergedSeu,
-                   celltypeCenter = "M2 MACROPHAGE",
-                   celltypeLeft = "Cytotoxic T Cells",
-                   celltypeRight = "Endothelial",
+                   celltypeCenter = "Macrophage",
+                   celltypeLeft = "T cell",
+                   celltypeRight = "Monocyte",
                    anno_col = 'celltype_first',
                    maxRadius=maxgap,
                    celldist=celldist)
