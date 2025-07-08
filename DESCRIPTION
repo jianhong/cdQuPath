@@ -33,6 +33,7 @@ Imports:
     S4Vectors,
     Seurat,
     SeuratObject,
+    SingleCellExperiment,
     SpatialExperiment,
     SummarizedExperiment
 Suggests:
