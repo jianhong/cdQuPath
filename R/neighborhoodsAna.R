@@ -1,4 +1,5 @@
 #' @importFrom SpatialExperiment SpatialExperiment
+#' @importFrom SingleCellExperiment SingleCellExperiment
 seuToSpe <- function(
     seu,
     ...){

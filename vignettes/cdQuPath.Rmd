@@ -25,7 +25,6 @@ suppressPackageStartupMessages({
   library(SingleCellExperiment)
   library(SpatialExperiment)
   library(dplyr)
-  library(GenomeInfoDb)
 })
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
