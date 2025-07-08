@@ -22,8 +22,10 @@ suppressPackageStartupMessages({
   library(dittoSeq)
   library(ggplot2)
   library(hoodscanR)
+  library(SingleCellExperiment)
   library(SpatialExperiment)
   library(dplyr)
+  library(GenomeInfoDb)
 })
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
