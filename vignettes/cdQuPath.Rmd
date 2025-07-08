@@ -71,7 +71,7 @@ This step involves merging the results from
 
 Navigate to line 25 of the `cellpose_stardist_multiNucleis_underGUI.groovy`
 script and update the path of the `stardistModel` variable to match the 
-file path of your `cell_seg_model.pb`.
+file path of your [`cell_seg_model.pb`](https://github.com/qupath/models/tree/main/stardist).
 Adjust the parameters from [line 26 to line 38](https://github.com/jianhong/codex_qupath/blob/main/scr/cellpose_stardist_multiNucleis_underGUI.groovy#L26-L38) accordingly.
 You may want to change the `cytoChannels` and `measurementPercentileCutoff` according to your observations.
 The `distanceCutoff` is the maximal cutoff distance of nucleus for multiple nucleus cells.
