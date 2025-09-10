@@ -1,6 +1,6 @@
 Package: cdQuPath
 Title: Analysis tools for Codex PhenoCycler-Fusion images with QuPath and R
-Version: 0.99.0.8
+Version: 0.99.0.9
 Authors@R: 
     person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))

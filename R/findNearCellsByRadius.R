@@ -14,7 +14,7 @@
 findNearCellsByRadius <- function(
     seu,
     maxRadius,
-    spatialCoordsNames = c('Cell.X', 'Cell.Y')){
+    spatialCoordsNames = CodexPredefined$spatialCoordsNames){
   stopifnot(is(seu, 'Seurat'))
   stopifnot(is.numeric(maxRadius))
   stopifnot(length(maxRadius)==1)

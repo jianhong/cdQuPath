@@ -4,7 +4,14 @@
 \alias{neighborhoodsAna}
 \title{Neighborhoods analysis}
 \usage{
-neighborhoodsAna(seu, k = 25, anno_col = "celltype_first", clusterK = 12, ...)
+neighborhoodsAna(
+  seu,
+  k = 25,
+  anno_col = "celltype_first",
+  clusterK = 12,
+  spatialCoordsNames = CodexPredefined$spatialCoordsNames,
+  ...
+)
 }
 \arguments{
 \item{seu}{A Seurat object}
@@ -16,6 +23,9 @@ See \link[hoodscanR]{findNearCells}.}
 See \link[hoodscanR]{findNearCells}.}
 
 \item{clusterK}{The number of clusters for \link[hoodscanR]{clustByHood}}
+
+\item{spatialCoordsNames}{The column names for spatial coordinates in the
+metadata of the Seurat object.}
 
 \item{...}{Other parameters used by \link[hoodscanR]{clustByHood} except
 'object', 'pm_cols' and 'k'.}

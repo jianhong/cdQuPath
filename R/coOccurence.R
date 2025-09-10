@@ -20,7 +20,7 @@ coOccurrence <- function(seu,
                         minRadius = 0,
                         maxRadius = 1000,
                         bins = 100,
-                        spatialCoordsNames = c('Cell.X', 'Cell.Y'),
+                        spatialCoordsNames = CodexPredefined$spatialCoordsNames,
                         celldist,
                         ...){
   stopifnot(is(seu, 'Seurat'))

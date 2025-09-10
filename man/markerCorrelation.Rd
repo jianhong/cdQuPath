@@ -9,6 +9,7 @@ markerCorrelation(
   layers = Layers(seu),
   method = c("spearman", "pearson", "kendall"),
   hclust_method = "complete",
+  output = c("plot", "matrix"),
   ...
 )
 }
@@ -23,10 +24,13 @@ is to be computed. See \link[stats]{cor}.}
 \item{hclust_method}{The agglomeration method to be used.
 See \link[stats]{hclust}.}
 
+\item{output}{The output of the function. Available options: plot (default),
+and matrix.}
+
 \item{...}{Parameter passed to \link[stats]{dist}}
 }
 \value{
-A list of ggplot object
+A list of ggplot object or a list of dist matrix.
 }
 \description{
 Create marker correlation heatmaps clustered by hclust.

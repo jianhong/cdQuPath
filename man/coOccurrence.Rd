@@ -10,7 +10,7 @@ coOccurrence(
   minRadius = 0,
   maxRadius = 1000,
   bins = 100,
-  spatialCoordsNames = c("Cell.X", "Cell.Y"),
+  spatialCoordsNames = CodexPredefined$spatialCoordsNames,
   celldist,
   ...
 )

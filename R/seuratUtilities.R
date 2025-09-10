@@ -81,8 +81,10 @@ findVarMarkers <- function(
 #'  is to be computed. See \link[stats]{cor}.
 #' @param hclust_method The agglomeration method to be used.
 #'  See \link[stats]{hclust}.
+#' @param output The output of the function. Available options: plot (default),
+#' and matrix.
 #' @param ... Parameter passed to \link[stats]{dist}
-#' @return A list of ggplot object
+#' @return A list of ggplot object or a list of dist matrix.
 #' @importFrom stats dist hclust cor
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot geom_tile aes scale_fill_gradientn xlab ylab 
@@ -96,9 +98,11 @@ markerCorrelation <- function(
     layers = Layers(seu),
     method = c('spearman', 'pearson', 'kendall'),
     hclust_method = 'complete',
+    output = c('plot', 'matrix'),
     ...){
   stopifnot(is(seu, 'Seurat'))
   method <- match.arg(method)
+  output <- match.arg(output)
   stopifnot(all(layers %in% Layers(seu)))
   if(length(names(layers))!=length(layers)) names(layers) <- layers
   lapply(layers, function(layer){
@@ -106,7 +110,11 @@ markerCorrelation <- function(
       mat <- GetAssayData(seu, layer = layer)
       mat <- t(as.matrix(mat))
       cor <- cor(mat, method = method)
-      ggHeatmap(cor, title=layer, hclust_method=hclust_method, ...)
+      if(output=='plot'){
+        ggHeatmap(cor, title=layer, hclust_method=hclust_method, ...)
+      }else{
+        cor
+      }
     }, error = function(e){
       NULL
     })
@@ -127,6 +135,8 @@ markerCorrelation <- function(
 #' is greater than max_zero_percentage, the zeros will be removed by random
 #' pick to meet the max percentage. This is used to make sure there is enough
 #' variance to fit the model. 
+#' @param assay,layer Names of assay and layer to get data from. 
+#' See \link[SeuratObject]{AssayData}.
 #' @param ... Not use.
 #' @return A Seurat object with a new assay named as 'GMM'. The re-scaled values
 #' saved in layer 'data'. 
@@ -146,11 +156,13 @@ fitGMM <- function(
       free.proportions = FALSE, equal.proportions = TRUE
     ),
     max_zero_percentage = 0.1,
+    assay = CodexPredefined$defaultAssay,
+    layer = 'counts',
     ...){
   stopifnot(is(seu, 'Seurat'))
   method <- match.arg(method)
-  dat <- GetAssayData(seu, assay = CodexPredefined$defaultAssay,
-                      layer = 'counts')
+  dat <- GetAssayData(seu, assay = assay,
+                      layer = layer)
   dat <- future_apply(dat, 1, function(marker){
     if(sum(marker)<2){
       # if only 1 counts or less, densityMclust will take forever.

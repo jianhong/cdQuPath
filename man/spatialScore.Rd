@@ -11,7 +11,7 @@ spatialScore(
   celltypeRight,
   anno_col = "celltype",
   maxRadius = 1000,
-  spatialCoordsNames = c("Cell.X", "Cell.Y"),
+  spatialCoordsNames = CodexPredefined$spatialCoordsNames,
   celldist,
   ...
 )

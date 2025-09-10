@@ -7,7 +7,7 @@
 findNearCellsByRadius(
   seu,
   maxRadius,
-  spatialCoordsNames = c("Cell.X", "Cell.Y")
+  spatialCoordsNames = CodexPredefined$spatialCoordsNames
 )
 }
 \arguments{

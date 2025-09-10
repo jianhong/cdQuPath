@@ -10,6 +10,8 @@ fitGMM(
   model = mixmodGaussianModel(family = "general", listModels = "Gaussian_p_Lk_Ck",
     free.proportions = FALSE, equal.proportions = TRUE),
   max_zero_percentage = 0.1,
+  assay = CodexPredefined$defaultAssay,
+  layer = "counts",
   ...
 )
 }
@@ -26,6 +28,9 @@ see \link[Rmixmod]{mixmodGaussianModel}.}
 is greater than max_zero_percentage, the zeros will be removed by random
 pick to meet the max percentage. This is used to make sure there is enough
 variance to fit the model.}
+
+\item{assay, layer}{Names of assay and layer to get data from.
+See \link[SeuratObject]{AssayData}.}
 
 \item{...}{Not use.}
 }

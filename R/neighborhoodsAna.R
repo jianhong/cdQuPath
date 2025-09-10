@@ -2,12 +2,13 @@
 #' @importFrom SingleCellExperiment SingleCellExperiment
 seuToSpe <- function(
     seu,
+    spatialCoordsNames = CodexPredefined$spatialCoordsNames,
     ...){
   stopifnot(is(seu, 'Seurat'))
   spe <- SpatialExperiment(
     assay = GetAssayData(seu, ...),
     colData = seu[[]],
-    spatialCoordsNames = c('Cell.X', 'Cell.Y')
+    spatialCoordsNames = spatialCoordsNames
   )
 }
 
@@ -21,6 +22,8 @@ seuToSpe <- function(
 #' @param anno_col Character vector. The name of annotation column to use.
 #' See \link[hoodscanR]{findNearCells}.
 #' @param clusterK The number of clusters for \link[hoodscanR]{clustByHood}
+#' @param spatialCoordsNames The column names for spatial coordinates in the
+#' metadata of the Seurat object.
 #' @param ... Other parameters used by \link[hoodscanR]{clustByHood} except
 #' 'object', 'pm_cols' and 'k'.
 #' @importFrom hoodscanR findNearCells scanHoods mergeHoodSpe mergeByGroup
@@ -33,11 +36,13 @@ neighborhoodsAna <- function(
     k = 25,
     anno_col = 'celltype_first',
     clusterK = 12,
+    spatialCoordsNames = CodexPredefined$spatialCoordsNames,
     ...){
   stopifnot(is(seu, 'Seurat'))
   stopifnot('Please run fitGMM first.'=
               CodexPredefined$GMM %in% SeuratObject::Assays(seu))
-  spe <- seuToSpe(seu, assay = 'GMM', layer = 'data')
+  spe <- seuToSpe(seu, assay = 'GMM', layer = 'data',
+                  spatialCoordsNames = spatialCoordsNames)
   # neighborhoods distance scanning, k = maximal neighbor cells
   fnc <- findNearCells(spe, k = k, anno_col = anno_col)
   # probability matrix
