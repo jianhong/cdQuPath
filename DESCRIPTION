@@ -1,6 +1,6 @@
 Package: cdQuPath
 Title: Analysis tools for Codex PhenoCycler-Fusion images with QuPath and R
-Version: 0.99.0.9
+Version: 0.99.0.10
 Authors@R: 
     person(given="Jianhong", family="Ou", email="jianhong.ou@duke.edu", 
         role=c("aut", "cre"), comment=c(ORCID="0000-0002-8652-2488"))
@@ -19,6 +19,7 @@ biocViews: CellBiology, Visualization, Clustering, SingleCell, Proteomics
 Depends:
     R (>= 4.3.0)
 Imports:
+    dynamicTreeCut,
     e1071,
     future.apply,
     ggplot2,
@@ -35,7 +36,8 @@ Imports:
     SeuratObject,
     SingleCellExperiment,
     SpatialExperiment,
-    SummarizedExperiment
+    SummarizedExperiment,
+    WGCNA
 Suggests:
     BiocStyle,
     knitr,

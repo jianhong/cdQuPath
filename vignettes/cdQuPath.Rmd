@@ -186,11 +186,13 @@ You may attempt to normalize the irregular sub-regions using LOESS (Local Polyno
 ## this script will not run in the vignette.
 ## it is time consuming.
 ## under-development, do not try
-seu_norm <- loessSmooth(seu)
-FeaturePlot(seu_norm, slot='count',
-            features = rownames(seu)[1],
-            reduction = 'pos',
-            ncol = 2) + scale_y_reverse()
+if(FALSE){
+  seu_norm <- loessSmooth(seu)
+  FeaturePlot(seu_norm, slot='count',
+              features = rownames(seu)[1],
+              reduction = 'pos',
+              ncol = 2) + scale_y_reverse()
+}
 ```
 
 The next step involves cell-wise normalization. The available normalization methods are 'LogNormalize', 'CLR' (centered log ratio), 'RC' (CPM), and 'zscore', which can be applied using the `normData` function. The normalization method except for 'zscore' is borrowed from `Seurat` package.
@@ -287,6 +289,16 @@ p_GMM[['data']]
 ## 
 DefaultAssay(seu) <- 'RNA'
 ```
+
+Users are also suggest to check the co-expressions by WGCNA (Weighted correlation network analysis
+).
+
+```{r WGCNA}
+getTOM(seu)
+modules <- plotModules(getTOM(seu, output='matrix'))
+modules
+```
+
 
 ### Assign cell types
 
