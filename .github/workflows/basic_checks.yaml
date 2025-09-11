@@ -44,7 +44,7 @@ jobs:
           BiocManager::repositories()
           remotes::install_deps(dependencies = TRUE, repos = BiocManager::repositories())
           remotes::install_cran("rcmdcheck")
-          BiocManager::install("SingleCellExperiment", type = "source", force = TRUE)
+          BiocManager::install(c( "SpatialExperiment","SingleCellExperiment","SummarizedExperiment","S4Vectors"), type = "source", force = TRUE)
           remotes::install_github("jianhong/cdQuPath")
         shell: Rscript {0}
 
