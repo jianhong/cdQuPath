@@ -19,7 +19,7 @@ Re-scaled values will be probabilities between 0-1."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.10</span>
       </span>
     </div>
 
@@ -63,6 +63,8 @@ Re-scaled values will be probabilities between 0-1.</p>
 <span>  model <span class="op">=</span> <span class="fu">mixmodGaussianModel</span><span class="op">(</span>family <span class="op">=</span> <span class="st">"general"</span>, listModels <span class="op">=</span> <span class="st">"Gaussian_p_Lk_Ck"</span>,</span>
 <span>    free.proportions <span class="op">=</span> <span class="cn">FALSE</span>, equal.proportions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  max_zero_percentage <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  assay <span class="op">=</span> <span class="va">CodexPredefined</span><span class="op">$</span><span class="va">defaultAssay</span>,</span>
+<span>  layer <span class="op">=</span> <span class="st">"counts"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -92,6 +94,11 @@ pick to meet the max percentage. This is used to make sure there is enough
 variance to fit the model.</p></dd>
 
 
+<dt id="arg-assay-layer">assay, layer<a class="anchor" aria-label="anchor" href="#arg-assay-layer"></a></dt>
+<dd><p>Names of assay and layer to get data from.
+See <a href="https://satijalab.github.io/seurat-object/reference/AssayData.html" class="external-link">AssayData</a>.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Not use.</p></dd>
 
@@ -114,7 +121,7 @@ saved in layer 'data'.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer></div>
