@@ -23,7 +23,8 @@ findNearCellsByRadius <- function(
   cell_pos_dat <- seu[[]][, spatialCoordsNames]
   colnames(cell_pos_dat) <- c("x", "y")
   res <- RANN::nn2(data = cell_pos_dat,
-                   k = nrow(cell_pos_dat),
+                   k = min(nrow(cell_pos_dat),
+                           floor(2147483647/nrow(cell_pos_dat))),
                    searchtype = "radius",
                    radius = maxRadius)
   names(res) <- c('cell.index', 'euclideanDistance')
