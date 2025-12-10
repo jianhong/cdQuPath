@@ -38,27 +38,33 @@ findNearCellsByRadius <- function(
 #' @param undefinedDist The default distance if not find.
 #' (see \link[RANN]{nn2})
 getCellDistance <- function(res, undefinedIdx=0, undefinedDist=1.340781e+154){
-  stopifnot(names(res)==c('cell.index', 'euclideanDistance'))
-  stopifnot(identical(dim(res[['cell.index']]),
-                      dim(res[['euclideanDistance']])))
   pairsIdx <- seq.int(nrow(res[['cell.index']]))
   keep <- !duplicated(res[['cell.index']])
   res <- lapply(res, function(.ele) .ele[keep, , drop=FALSE])
   pairsIdx <- pairsIdx[keep]
-  pairsIdx <- rep(pairsIdx, each=ncol(res[['cell.index']]))
+  
+  n_cols <- ncol(res[['cell.index']])
+  
+  cell_1 <- rep(pairsIdx, each = n_cols)
+  cell_2 <- as.integer(t(res[['cell.index']]))
+  dist <- as.numeric(t(res[['euclideanDistance']]))
+  
+  # Filter in one step
+  keep <- (cell_2 != undefinedIdx) & (cell_1 != cell_2)
+  
   pairs <- data.frame(
-    cell_1 = pairsIdx,
-    cell_2 = as.integer(t(res[['cell.index']])),
-    dist = as.numeric(t(res[['euclideanDistance']]))
+    cell_1 = cell_1[keep],
+    cell_2 = cell_2[keep],
+    dist = dist[keep]
   )
-  pairs <- pairs[pairs[, 'cell_2']!=undefinedIdx, , drop=FALSE]
-  pairs <- pairs[pairs[, 'cell_1']!=pairs[, 'cell_2'], , drop=FALSE]
-  pairs <- unique(pairs)
-  ## remove duplicates again
-  pairs[, c(1, 2)] <- do.call(rbind,
-                              apply(pairs[, c(1, 2)],
-                                    1, sort, simplify = FALSE))
-  pairs <- unique(pairs)
+  
+  # Vectorized sorting (much faster than apply)
+  sorted_1 <- pmin(pairs$cell_1, pairs$cell_2)
+  sorted_2 <- pmax(pairs$cell_1, pairs$cell_2)
+  
+  # Remove duplicates efficiently
+  dup_mask <- !duplicated(data.frame(sorted_1, sorted_2, pairs$dist))
+  pairs <- pairs[dup_mask, , drop = FALSE]
   return(pairs)
 }
 
