@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cdQuPath</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0.11</span>
       </span>
     </div>
 
@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Jianhong
 Ou</h4>
             
-            <h4 data-toc-skip class="date">11 September 2025</h4>
+            <h4 data-toc-skip class="date">10 December 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jianhong/cdQuPath/blob/main/vignettes/cdQuPath.Rmd" class="external-link"><code>vignettes/cdQuPath.Rmd</code></a></small>
       <div class="hidden name"><code>cdQuPath.Rmd</code></div>
@@ -262,7 +262,7 @@ below 3 suggests that the antibodies are performing poorly.</p>
 <span>        split.by <span class="op">=</span> <span class="st">'Cell.isMultiNucleis'</span>,</span>
 <span>        pt.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">500</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>        ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/vlnplot1-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/vlnplot1-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## if you want to save the plot, try</span></span>
 <span><span class="co">## ggsave(filename)</span></span></code></pre></div>
@@ -270,7 +270,7 @@ below 3 suggests that the antibodies are performing poorly.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html" class="external-link">VlnPlot</a></span><span class="op">(</span><span class="va">seu</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'cd68'</span>, <span class="st">'CD11c'</span>, <span class="st">'cd34'</span><span class="op">)</span>,</span>
 <span>        pt.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">500</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>        ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/vlnPlot2-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/vlnPlot2-1.png" class="r-plt" width="700"></p>
 <p>Now, we can proceed with filtering the cells. Upon observation, we
 notice that the average area of single-nucleus cells is below 500.
 Therefore, we establish the cutoff for cell area at approximately three
@@ -309,7 +309,7 @@ data of cells is contained within the reduction matrix labeled
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/regionCheck-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/regionCheck-1.png" class="r-plt" width="700"></p>
 <p>You may attempt to normalize the irregular sub-regions using LOESS
 (Local Polynomial Regression Fitting) with the <code>loessSmooth</code>
 function.</p>
@@ -338,7 +338,7 @@ normalization methods are ‘LogNormalize’, ‘CLR’ (centered log ratio),
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/LabelPoints.html" class="external-link">LabelPoints</a></span><span class="op">(</span>plot <span class="op">=</span> <span class="va">plot1</span>, points <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>, repel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/variableFeatures-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/variableFeatures-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="scaling-the-data-and-do-cluster-analysis">Scaling the data and do cluster analysis<a class="anchor" aria-label="anchor" href="#scaling-the-data-and-do-cluster-analysis"></a>
@@ -354,7 +354,7 @@ accordingly to suit your needs.</p>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/VizDimLoadings.html" class="external-link">VizDimLoadings</a></span><span class="op">(</span><span class="va">seu</span>, dims <span class="op">=</span> <span class="va">dim</span>,</span>
 <span>               nfeatures<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">seu</span>, dims <span class="op">=</span> <span class="va">dim</span><span class="op">)</span></span>
 <span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">seu</span>, resolution <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
@@ -373,7 +373,7 @@ accordingly to suit your needs.</p>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
 <span>        reduction <span class="op">=</span> <span class="st">'umap'</span>, label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        pt.size <span class="op">=</span> <span class="va">pt.size</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the distribution of the clusters in spatial position.</span></span>
 <span><span class="va">ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -381,30 +381,30 @@ accordingly to suit your needs.</p>
 <span>        reduction <span class="op">=</span> <span class="st">'pos'</span>, label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        split.by <span class="op">=</span> <span class="st">'seurat_clusters'</span>,</span>
 <span>        ncol <span class="op">=</span> <span class="va">ncol</span>, pt.size <span class="op">=</span> <span class="va">pt.size</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-3.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the nucleis distribution</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
 <span>             var <span class="op">=</span> <span class="st">'Cell.isMultiNucleis'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'seurat_clusters'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-4.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-4.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">'pos'</span>, label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        split.by <span class="op">=</span> <span class="st">'Cell.isMultiNucleis'</span>,</span>
 <span>        pt.size <span class="op">=</span> <span class="va">pt.size</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-5.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-5.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html" class="external-link">VlnPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
 <span>        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Nucleus.Area.um.2'</span>,</span>
 <span>                     <span class="st">'Cell.Area.um.2'</span>,</span>
 <span>                     <span class="st">'Nucleus.Cell.area.ratio'</span><span class="op">)</span>,</span>
 <span>        pt.size <span class="op">=</span> <span class="va">pt.size</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-6.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-6.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Dot plot</span></span>
 <span><span class="va">markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span><span class="op">$</span><span class="va">gene</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html" class="external-link">DotPlot</a></span><span class="op">(</span><span class="va">seu</span>, features <span class="op">=</span> <span class="va">markers</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-7.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-3-7.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="rescale-data-using-gaussian-mixture-model">Rescale data using Gaussian Mixture Model<a class="anchor" aria-label="anchor" href="#rescale-data-using-gaussian-mixture-model"></a>
@@ -421,7 +421,7 @@ the background of the sub-regions are not identical.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co">## for model fit</span></span>
 <span><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fitGMM.html">fitGMM</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html" class="external-link">DotPlot</a></span><span class="op">(</span><span class="va">seu</span>, features <span class="op">=</span> <span class="va">markers</span>, assay <span class="op">=</span> <span class="st">'GMM'</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/gmm-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/gmm-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="correlation-heatmap">Correlation heatmap<a class="anchor" aria-label="anchor" href="#correlation-heatmap"></a>
@@ -440,13 +440,13 @@ inputs such as z-scales, GMM data, and so on.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## plot the correlations for data, here it is Z-scale data</span></span>
 <span><span class="va">p</span><span class="op">[[</span><span class="st">'data'</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/cor-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/cor-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## use GMM rescaled data to plot the correlation</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'GMM'</span></span>
 <span><span class="va">p_GMM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/markerCorrelation.html">markerCorrelation</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span>
 <span><span class="va">p_GMM</span><span class="op">[[</span><span class="st">'data'</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/cor-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/cor-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## </span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'RNA'</span></span></code></pre></div>
@@ -454,10 +454,10 @@ inputs such as z-scales, GMM data, and so on.</p>
 correlation network analysis ).</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/getTOM.html">getTOM</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/WGCNA-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/WGCNA-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modules</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotModules.html">plotModules</a></span><span class="op">(</span><span class="fu"><a href="../reference/getTOM.html">getTOM</a></span><span class="op">(</span><span class="va">seu</span>, output<span class="op">=</span><span class="st">'matrix'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/WGCNA-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/WGCNA-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modules</span></span></code></pre></div>
 <pre><code><span><span class="co">##  DAPI.01    CD163    CD127     sox9     CD14      CD4      mpo     cd68 </span></span>
@@ -492,30 +492,30 @@ assignment.</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the cell type annotation by clusters</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
 <span>             var <span class="op">=</span> <span class="st">'celltype'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'Cell.isMultiNucleis'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-3.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-3.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the first annotation of each cell, not restricted by seurat_cluster</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">seu</span>, group.by <span class="op">=</span> <span class="st">'celltype_first'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-4.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-4.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">seu</span>,</span>
 <span>             var <span class="op">=</span> <span class="st">'celltype_first'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'Cell.isMultiNucleis'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-5.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-5.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## check the signals for each celltype</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'celltype'</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html" class="external-link">DotPlot</a></span><span class="op">(</span><span class="va">seu</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, vjust <span class="op">=</span> <span class="fl">1</span>, hjust<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltype-6.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltype-6.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## export the celltype</span></span>
 <span><span class="va">ct</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Object.ID<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>,</span>
@@ -613,7 +613,7 @@ create a merged dataset.</p>
 <span>             var <span class="op">=</span> <span class="st">'celltype_first'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'orig.ident'</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/runSample2-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/runSample2-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## pie chart</span></span>
 <span><span class="va">plotData</span> <span class="op">&lt;-</span> <span class="va">p</span><span class="op">$</span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -625,26 +625,26 @@ create a merged dataset.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1.7</span>, y<span class="op">=</span><span class="va">y_pos</span>,</span>
 <span>                label<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">percent</span><span class="op">*</span><span class="fl">100</span>, digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, <span class="st">'%'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_polar.html" class="external-link">coord_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="st">'y'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_radial.html" class="external-link">coord_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="st">'y'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">grouping</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/runSample2-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/runSample2-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html" class="external-link">FeaturePlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>, slot<span class="op">=</span><span class="st">'count'</span>,</span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span>,</span>
 <span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/runSample2-3.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/runSample2-3.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>, group.by <span class="op">=</span> <span class="st">'celltype'</span>, reduction <span class="op">=</span> <span class="st">'pos'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/runSample2-4.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/runSample2-4.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## use GMM rescaled data to plot the correlation</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'GMM'</span></span>
 <span><span class="va">p_GMM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/markerCorrelation.html">markerCorrelation</a></span><span class="op">(</span><span class="va">mergedSeu</span>, layers <span class="op">=</span> <span class="st">'data'</span><span class="op">)</span></span>
 <span><span class="va">p_GMM</span><span class="op">[[</span><span class="st">'data'</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/runSample2-5.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/runSample2-5.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## </span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">'RNA'</span></span></code></pre></div>
@@ -797,7 +797,7 @@ weight for each celltype.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>,</span>
 <span>             var <span class="op">=</span> <span class="st">'celltype2'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'Cell.isMultiNucleis'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="700"></p>
 <p>You can also try to detect the cell type by a generalized k-Nearest
 Neighbors Classifier.</p>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
@@ -810,14 +810,14 @@ Neighbors Classifier.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">$</span><span class="va">celltypeByKNN</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Chondroblastic    Endothelial   Fibroblastic     Mast cells        Myeloid </span></span>
-<span><span class="co">##              0            226              5            660             30 </span></span>
+<span><span class="co">##              0            231              5            657             30 </span></span>
 <span><span class="co">##   Osteoblastic   Osteoclastic      Pericytes  Proliferating     T/NK cells </span></span>
-<span><span class="co">##             37            221              1             27            162</span></span></code></pre>
+<span><span class="co">##             38            218              1             30            159</span></span></code></pre>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoBarPlot.html" class="external-link">dittoBarPlot</a></span><span class="op">(</span><span class="va">mergedSeu</span>,</span>
 <span>             var <span class="op">=</span> <span class="st">'celltypeByKNN'</span>,</span>
 <span>             group.by<span class="op">=</span><span class="st">'orig.ident'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/celltypeDetection2-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/celltypeDetection2-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="align-the-single-cell-rnaseq-data-to-codex-data-by-knn-classifier">Align the single cell RNAseq data to Codex data by KNN
@@ -884,7 +884,7 @@ transcriptomes using Codex spatial information.</p>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">pseudo</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>            reduction <span class="op">=</span> <span class="st">'pos'</span>,</span>
 <span>            ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html" class="external-link">DarkTheme</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/alignCells-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/alignCells-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="detect-the-celltype-by-other-tools">Detect the celltype by other tools<a class="anchor" aria-label="anchor" href="#detect-the-celltype-by-other-tools"></a>
@@ -973,25 +973,25 @@ communities.</p>
 <span><span class="co"># Plot the metrics for probability matrix</span></span>
 <span><span class="fu"><a href="https://davislaboratory.github.io/hoodscanR/reference/plotTissue.html" class="external-link">plotTissue</a></span><span class="op">(</span><span class="va">spe</span>, color <span class="op">=</span> <span class="va">entropy</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_color_gradientn</a></span><span class="op">(</span>colors<span class="op">=</span><span class="va">CodexPredefined</span><span class="op">$</span><span class="va">heatColor</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://davislaboratory.github.io/hoodscanR/reference/plotTissue.html" class="external-link">plotTissue</a></span><span class="op">(</span><span class="va">spe</span>, color <span class="op">=</span> <span class="va">perplexity</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_color_gradientn</a></span><span class="op">(</span>colors<span class="op">=</span><span class="va">CodexPredefined</span><span class="op">$</span><span class="va">heatColor</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-2.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-2.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the clusters for the probability matrix</span></span>
 <span><span class="fu"><a href="https://davislaboratory.github.io/hoodscanR/reference/plotTissue.html" class="external-link">plotTissue</a></span><span class="op">(</span><span class="va">spe</span>, color <span class="op">=</span> <span class="va">clusters</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-3.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-3.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot heatmap for neighbourhood analysis</span></span>
 <span><span class="fu"><a href="https://davislaboratory.github.io/hoodscanR/reference/plotColocal.html" class="external-link">plotColocal</a></span><span class="op">(</span><span class="va">spe</span>, pm_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">spe</span><span class="op">$</span><span class="va">celltype_first</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-4.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-4.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot probability distribution</span></span>
 <span><span class="fu"><a href="https://davislaboratory.github.io/hoodscanR/reference/plotProbDist.html" class="external-link">plotProbDist</a></span><span class="op">(</span><span class="va">spe</span>, pm_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">spe</span><span class="op">$</span><span class="va">celltype_first</span><span class="op">)</span>, </span>
 <span>             by_cluster <span class="op">=</span> <span class="cn">TRUE</span>, plot_all <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>             show_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">clusterK</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-5.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/neighborhoodsAna-5.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="co-occurrence-analysis">Co-occurrence analysis<a class="anchor" aria-label="anchor" href="#co-occurrence-analysis"></a>
@@ -1013,7 +1013,7 @@ the shortest distance).</p>
 <span><span class="va">maxgap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">mergedSeu</span><span class="op">$</span><span class="va">Cell.Length.um</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
 <span><span class="va">ji</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JaccardIndex.html">JaccardIndex</a></span><span class="op">(</span><span class="va">mergedSeu</span>, maxRadius <span class="op">=</span> <span class="va">maxgap</span>, anno_col<span class="op">=</span><span class="st">'celltype_first'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotJaccardIndex.html">plotJaccardIndex</a></span><span class="op">(</span><span class="va">ji</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="700"></p>
 <p>The co-occurrence score gives us an indication on whether given two
 factors such as cell cluster, cell type, and etc, co-occur with each
 other at specific distances across the tissue. The co-occurrence score
@@ -1032,13 +1032,13 @@ is defined as:
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq.int</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">20</span><span class="op">-</span><span class="fl">10</span>, y<span class="op">=</span><span class="va">cooc</span><span class="op">[</span>, <span class="st">'cell proportion'</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'distance'</span>, y<span class="op">=</span><span class="st">'proportion'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/coOccurence-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/coOccurence-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plotData</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">cooc</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">plotData</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Var1</span>, y<span class="op">=</span><span class="va">Var2</span>, fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">'bin'</span>, y<span class="op">=</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"white"</span>, high <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/coOccurence-2.png" width="700">
+<p><img src="cdQuPath_files/figure-html/coOccurence-2.png" class="r-plt" width="700">
 The p-value of co-occurence can be calculated based on permutation test
 or a more rigorous framework, the homogeneous multitype Poisson point
 process (PPP) or complete spatial randomness and independence (CSRI) by
@@ -1068,7 +1068,7 @@ celltype.</p>
 <span><span class="co">## 6 a5b179c6-c0fc-4952-89c6-cfc942a135a3 78.08983 352.7442     4.517159</span></span></code></pre>
 <div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="va">ss</span><span class="op">$</span><span class="va">spatialScore</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cdQuPath_files/figure-html/spatialScore-1.png" width="700"></p>
+<p><img src="cdQuPath_files/figure-html/spatialScore-1.png" class="r-plt" width="700"></p>
 </div>
 </div>
 </div>
@@ -1077,8 +1077,8 @@ celltype.</p>
 </h2>
 <div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>R version 4.5.1 (2025-06-13) Platform: x86_64-pc-linux-gnu Running
-under: Ubuntu 24.04.2 LTS</p>
+<p>R Under development (unstable) (2025-12-07 r89119) Platform:
+x86_64-pc-linux-gnu Running under: Ubuntu 24.04.3 LTS</p>
 <p>Matrix products: default BLAS:
 /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 LAPACK:
 /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;
@@ -1093,73 +1093,74 @@ LAPACK version 3.12.0</p>
 <p>attached base packages: [1] stats4 stats graphics grDevices utils
 datasets methods<br>
 [8] base</p>
-<p>other attached packages: [1] future.apply_1.20.0 future_1.67.0<br>
-[3] dplyr_1.1.4 SpatialExperiment_1.19.1<br>
-[5] SingleCellExperiment_1.31.1 SummarizedExperiment_1.39.1 [7]
-Biobase_2.69.0 GenomicRanges_1.61.2<br>
-[9] Seqinfo_0.99.2 IRanges_2.43.0<br>
-[11] S4Vectors_0.47.0 BiocGenerics_0.55.1<br>
-[13] generics_0.1.4 MatrixGenerics_1.21.0<br>
-[15] matrixStats_1.5.0 hoodscanR_1.7.0<br>
-[17] dittoSeq_1.21.0 ggplot2_3.5.2<br>
-[19] Seurat_5.3.0 SeuratObject_5.2.0<br>
-[21] sp_2.2-0 cdQuPath_0.99.0.10<br>
-[23] BiocStyle_2.37.1</p>
+<p>other attached packages: [1] future.apply_1.20.1 future_1.68.0<br>
+[3] dplyr_1.1.4 SpatialExperiment_1.21.0<br>
+[5] SingleCellExperiment_1.33.0 SummarizedExperiment_1.41.0 [7]
+Biobase_2.71.0 GenomicRanges_1.63.1<br>
+[9] Seqinfo_1.1.0 IRanges_2.45.0<br>
+[11] S4Vectors_0.49.0 BiocGenerics_0.57.0<br>
+[13] generics_0.1.4 MatrixGenerics_1.23.0<br>
+[15] matrixStats_1.5.0 hoodscanR_1.9.0<br>
+[17] dittoSeq_1.23.0 ggplot2_4.0.1<br>
+[19] Seurat_5.3.1 SeuratObject_5.2.0<br>
+[21] sp_2.2-0 cdQuPath_0.99.0.11<br>
+[23] BiocStyle_2.39.0</p>
 <p>loaded via a namespace (and not attached): [1] RcppAnnoy_0.0.22
-splines_4.5.1 later_1.4.4<br>
-[4] tibble_3.3.0 polyclip_1.10-7 preprocessCore_1.71.2 [7] rpart_4.1.24
+splines_4.6.0 later_1.4.4<br>
+[4] tibble_3.3.0 polyclip_1.10-7 preprocessCore_1.73.0 [7] rpart_4.1.24
 fastDummies_1.7.5 lifecycle_1.0.4<br>
 [10] fastcluster_1.3.0 doParallel_1.0.17 globals_0.18.0<br>
 [13] lattice_0.22-7 MASS_7.3-65 backports_1.5.0<br>
-[16] magrittr_2.0.3 Hmisc_5.2-3 plotly_4.11.0<br>
-[19] sass_0.4.10 rmarkdown_2.29 jquerylib_0.1.4<br>
-[22] yaml_2.3.10 httpuv_1.6.16 sctransform_0.4.2<br>
-[25] spam_2.11-1 spatstat.sparse_3.1-0 reticulate_1.43.0<br>
-[28] cowplot_1.2.0 pbapply_1.7-4 DBI_1.2.3<br>
-[31] RColorBrewer_1.1-3 abind_1.4-8 Rtsne_0.17<br>
-[34] purrr_1.1.0 nnet_7.3-20 circlize_0.4.16<br>
-[37] ggrepel_0.9.6 irlba_2.3.5.1 listenv_0.9.1<br>
-[40] spatstat.utils_3.1-5 pheatmap_1.0.13 goftest_1.2-3<br>
-[43] RSpectra_0.16-2 spatstat.random_3.4-1 fitdistrplus_1.2-4<br>
-[46] parallelly_1.45.1 pkgdown_2.1.3 codetools_0.2-20<br>
-[49] DelayedArray_0.35.2 shape_1.4.6.1 tidyselect_1.2.1<br>
-[52] farver_2.1.2 base64enc_0.1-3 dynamicTreeCut_1.63-1 [55]
-spatstat.explore_3.5-2 jsonlite_2.0.0 GetoptLong_1.0.5<br>
-[58] e1071_1.7-16 Formula_1.2-5 progressr_0.15.1<br>
-[61] ggridges_0.5.7 survival_3.8-3 iterators_1.0.14<br>
-[64] systemfonts_1.2.3 Rmixmod_2.1.10 foreach_1.5.2<br>
-[67] tools_4.5.1 ragg_1.5.0 ica_1.0-3<br>
-[70] Rcpp_1.1.0 glue_1.8.0 gridExtra_2.3<br>
-[73] SparseArray_1.9.1 xfun_0.53 withr_3.0.2<br>
-[76] BiocManager_1.30.26 fastmap_1.2.0 digest_0.6.37<br>
-[79] R6_2.6.1 mime_0.13 textshaping_1.0.3<br>
-[82] colorspace_2.1-1 scattermore_1.2 GO.db_3.21.0<br>
-[85] tensor_1.5.1 spatstat.data_3.1-8 RSQLite_2.4.3<br>
-[88] tidyr_1.3.1 data.table_1.17.8 class_7.3-23<br>
-[91] httr_1.4.7 htmlwidgets_1.6.4 S4Arrays_1.9.1<br>
-[94] uwot_0.2.3 pkgconfig_2.0.3 scico_1.5.0<br>
-[97] gtable_0.3.6 blob_1.2.4 ComplexHeatmap_2.25.2 [100] impute_1.83.0
-lmtest_0.9-40 XVector_0.49.0<br>
-[103] htmltools_0.5.8.1 dotCall64_1.2 bookdown_0.44<br>
-[106] clue_0.3-66 scales_1.4.0 png_0.1-8<br>
-[109] spatstat.univar_3.1-4 rstudioapi_0.17.1 knitr_1.50<br>
-[112] reshape2_1.4.4 rjson_0.2.23 checkmate_2.3.3<br>
-[115] nlme_3.1-168 GlobalOptions_0.1.2 proxy_0.4-27<br>
-[118] cachem_1.1.0 zoo_1.8-14 stringr_1.5.2<br>
-[121] KernSmooth_2.23-26 parallel_4.5.1 miniUI_0.1.2<br>
-[124] foreign_0.8-90 AnnotationDbi_1.71.1 desc_1.4.3<br>
-[127] pillar_1.11.0 grid_4.5.1 vctrs_0.6.5<br>
-[130] RANN_2.6.2 promises_1.3.3 xtable_1.8-4<br>
-[133] cluster_2.1.8.1 htmlTable_2.4.3 evaluate_1.0.5<br>
-[136] magick_2.9.0 cli_3.6.5 compiler_4.5.1<br>
-[139] rlang_1.1.6 crayon_1.5.3 labeling_0.4.3<br>
-[142] mclust_6.1.1 plyr_1.8.9 fs_1.6.6<br>
-[145] stringi_1.8.7 viridisLite_0.4.2 deldir_2.0-4<br>
-[148] WGCNA_1.73 Biostrings_2.77.2 lazyeval_0.2.2<br>
-[151] spatstat.geom_3.5-0 Matrix_1.7-4 RcppHNSW_0.6.0<br>
-[154] patchwork_1.3.2 bit64_4.6.0-1 KEGGREST_1.49.1<br>
-[157] shiny_1.11.1 ROCR_1.0-11 igraph_2.1.4<br>
-[160] memoise_2.0.1 bslib_0.9.0 bit_4.6.0</p>
+[16] magrittr_2.0.4 Hmisc_5.2-4 plotly_4.11.0<br>
+[19] sass_0.4.10 rmarkdown_2.30 jquerylib_0.1.4<br>
+[22] yaml_2.3.12 httpuv_1.6.16 otel_0.2.0<br>
+[25] sctransform_0.4.2 spam_2.11-1 spatstat.sparse_3.1-0 [28]
+reticulate_1.44.1 cowplot_1.2.0 pbapply_1.7-4<br>
+[31] DBI_1.2.3 RColorBrewer_1.1-3 abind_1.4-8<br>
+[34] Rtsne_0.17 purrr_1.2.0 nnet_7.3-20<br>
+[37] circlize_0.4.17 ggrepel_0.9.6 irlba_2.3.5.1<br>
+[40] listenv_0.10.0 spatstat.utils_3.2-0 pheatmap_1.0.13<br>
+[43] goftest_1.2-3 RSpectra_0.16-2 spatstat.random_3.4-3 [46]
+fitdistrplus_1.2-4 parallelly_1.45.1 pkgdown_2.2.0<br>
+[49] codetools_0.2-20 DelayedArray_0.37.0 shape_1.4.6.1<br>
+[52] tidyselect_1.2.1 farver_2.1.2 base64enc_0.1-3<br>
+[55] dynamicTreeCut_1.63-1 spatstat.explore_3.6-0 jsonlite_2.0.0<br>
+[58] GetoptLong_1.1.0 e1071_1.7-16 Formula_1.2-5<br>
+[61] progressr_0.18.0 ggridges_0.5.7 survival_3.8-3<br>
+[64] iterators_1.0.14 systemfonts_1.3.1 Rmixmod_2.1.10<br>
+[67] foreach_1.5.2 tools_4.6.0 ragg_1.5.0<br>
+[70] ica_1.0-3 Rcpp_1.1.0.8.1 glue_1.8.0<br>
+[73] gridExtra_2.3 SparseArray_1.11.8 xfun_0.54<br>
+[76] withr_3.0.2 BiocManager_1.30.27 fastmap_1.2.0<br>
+[79] digest_0.6.39 R6_2.6.1 mime_0.13<br>
+[82] colorspace_2.1-2 textshaping_1.0.4 scattermore_1.2<br>
+[85] GO.db_3.22.0 tensor_1.5.1 spatstat.data_3.1-9<br>
+[88] RSQLite_2.4.5 tidyr_1.3.1 data.table_1.17.8<br>
+[91] class_7.3-23 httr_1.4.7 htmlwidgets_1.6.4<br>
+[94] S4Arrays_1.11.1 uwot_0.2.4 pkgconfig_2.0.3<br>
+[97] scico_1.5.0 gtable_0.3.6 blob_1.2.4<br>
+[100] ComplexHeatmap_2.27.0 impute_1.85.0 lmtest_0.9-40<br>
+[103] S7_0.2.1 XVector_0.51.0 htmltools_0.5.9<br>
+[106] dotCall64_1.2 bookdown_0.46 clue_0.3-66<br>
+[109] scales_1.4.0 png_0.1-8 spatstat.univar_3.1-5 [112]
+rstudioapi_0.17.1 knitr_1.50 reshape2_1.4.5<br>
+[115] rjson_0.2.23 checkmate_2.3.3 nlme_3.1-168<br>
+[118] GlobalOptions_0.1.3 proxy_0.4-27 cachem_1.1.0<br>
+[121] zoo_1.8-14 stringr_1.6.0 KernSmooth_2.23-26<br>
+[124] parallel_4.6.0 miniUI_0.1.2 foreign_0.8-90<br>
+[127] AnnotationDbi_1.73.0 desc_1.4.3 pillar_1.11.1<br>
+[130] grid_4.6.0 vctrs_0.6.5 RANN_2.6.2<br>
+[133] promises_1.5.0 xtable_1.8-4 cluster_2.1.8.1<br>
+[136] htmlTable_2.4.3 evaluate_1.0.5 magick_2.9.0<br>
+[139] cli_3.6.5 compiler_4.6.0 crayon_1.5.3<br>
+[142] rlang_1.1.6 labeling_0.4.3 mclust_6.1.2<br>
+[145] plyr_1.8.9 fs_1.6.6 stringi_1.8.7<br>
+[148] viridisLite_0.4.2 deldir_2.0-4 WGCNA_1.73<br>
+[151] Biostrings_2.79.2 lazyeval_0.2.2 spatstat.geom_3.6-1<br>
+[154] Matrix_1.7-4 RcppHNSW_0.6.0 patchwork_1.3.2<br>
+[157] bit64_4.6.0-1 KEGGREST_1.51.1 shiny_1.12.1<br>
+[160] ROCR_1.0-11 igraph_2.2.1 memoise_2.0.1<br>
+[163] bslib_0.9.0 bit_4.6.0</p>
 </div>
   </div>
 
@@ -1178,7 +1179,7 @@ lmtest_0.9-40 XVector_0.49.0<br>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
