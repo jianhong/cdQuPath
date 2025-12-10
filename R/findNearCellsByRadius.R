@@ -4,6 +4,7 @@
 #' @param seu An seurat object.
 #' @param maxRadius numeric(1L). Maximal Euclidean distance.
 #' @param spatialCoordsNames The column names of coordinates
+#' @param k The maximum number of nearest neighbours to compute. 
 #' @return A data.frame of distance pairs with column name
 #'  as 'cell_1', 'cell_2', 'dist'
 #' @importFrom RANN nn2
@@ -14,17 +15,24 @@
 findNearCellsByRadius <- function(
     seu,
     maxRadius,
-    spatialCoordsNames = CodexPredefined$spatialCoordsNames){
+    spatialCoordsNames = CodexPredefined$spatialCoordsNames,
+    k){
   stopifnot(is(seu, 'Seurat'))
   stopifnot(is.numeric(maxRadius))
   stopifnot(length(maxRadius)==1)
   stopifnot(all(spatialCoordsNames %in% colnames(seu[[]])))
   stopifnot(length(spatialCoordsNames)==2)
+  if(missing(k)){
+    k <- 2147483647
+  }else{
+    k <- as.integer(k)
+  }
   cell_pos_dat <- seu[[]][, spatialCoordsNames]
   colnames(cell_pos_dat) <- c("x", "y")
   res <- RANN::nn2(data = cell_pos_dat,
                    k = min(nrow(cell_pos_dat),
-                           floor(2147483647/nrow(cell_pos_dat))),
+                           floor(2147483647/nrow(cell_pos_dat)),
+                           k),
                    searchtype = "radius",
                    radius = maxRadius)
   names(res) <- c('cell.index', 'euclideanDistance')

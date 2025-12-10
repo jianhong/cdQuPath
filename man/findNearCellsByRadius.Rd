@@ -7,7 +7,8 @@
 findNearCellsByRadius(
   seu,
   maxRadius,
-  spatialCoordsNames = CodexPredefined$spatialCoordsNames
+  spatialCoordsNames = CodexPredefined$spatialCoordsNames,
+  k
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ findNearCellsByRadius(
 \item{maxRadius}{numeric(1L). Maximal Euclidean distance.}
 
 \item{spatialCoordsNames}{The column names of coordinates}
+
+\item{k}{The maximum number of nearest neighbours to compute.}
 }
 \value{
 A data.frame of distance pairs with column name
